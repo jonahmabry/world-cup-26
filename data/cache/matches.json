@@ -1,35 +1,35 @@
 {
-  "760418": {
-    "id": "760418",
-    "homeTeam": "Haiti",
-    "awayTeam": "Scotland",
-    "homeScore": 0,
-    "awayScore": 1,
+  "760421": {
+    "id": "760421",
+    "homeTeam": "Australia",
+    "awayTeam": "Türkiye",
+    "homeScore": 2,
+    "awayScore": 0,
     "status": "final",
-    "groupId": "C",
-    "kickoff": "2026-06-14T01:00Z",
+    "groupId": "D",
+    "kickoff": "2026-06-14T04:00Z",
     "homeCards": {
-      "yellows": 1,
+      "yellows": 0,
       "reds": 0,
       "secondYellows": 0
     },
     "awayCards": {
-      "yellows": 3,
+      "yellows": 1,
       "reds": 0,
       "secondYellows": 0
     }
   },
-  "760419": {
-    "id": "760419",
-    "homeTeam": "Brazil",
-    "awayTeam": "Morocco",
-    "homeScore": 1,
+  "760422": {
+    "id": "760422",
+    "homeTeam": "Germany",
+    "awayTeam": "Curaçao",
+    "homeScore": 7,
     "awayScore": 1,
     "status": "final",
-    "groupId": "C",
-    "kickoff": "2026-06-13T22:00Z",
+    "groupId": "E",
+    "kickoff": "2026-06-14T17:00Z",
     "homeCards": {
-      "yellows": 2,
+      "yellows": 0,
       "reds": 0,
       "secondYellows": 0
     },
@@ -39,24 +39,207 @@
       "secondYellows": 0
     }
   },
-  "760420": {
-    "id": "760420",
-    "homeTeam": "Qatar",
-    "awayTeam": "Switzerland",
-    "homeScore": 1,
-    "awayScore": 1,
-    "status": "final",
-    "groupId": "B",
-    "kickoff": "2026-06-13T19:00Z",
-    "homeCards": {
-      "yellows": 2,
-      "reds": 0,
-      "secondYellows": 0
+  "matches": {
+    "760414": {
+      "id": "760414",
+      "homeTeam": "South Korea",
+      "awayTeam": "Czechia",
+      "homeScore": 2,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "A",
+      "kickoff": "2026-06-12T02:00Z",
+      "homeCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      }
     },
-    "awayCards": {
-      "yellows": 1,
-      "reds": 0,
-      "secondYellows": 0
+    "760415": {
+      "id": "760415",
+      "homeTeam": "Mexico",
+      "awayTeam": "South Africa",
+      "homeScore": 2,
+      "awayScore": 0,
+      "status": "final",
+      "groupId": "A",
+      "kickoff": "2026-06-11T19:00Z",
+      "homeCards": {
+        "yellows": 1,
+        "reds": 1,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 2,
+        "reds": 2,
+        "secondYellows": 0
+      }
+    },
+    "760416": {
+      "id": "760416",
+      "homeTeam": "Canada",
+      "awayTeam": "Bosnia-Herzegovina",
+      "homeScore": 1,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "B",
+      "kickoff": "2026-06-12T19:00Z",
+      "homeCards": {
+        "yellows": 2,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 3,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760417": {
+      "id": "760417",
+      "homeTeam": "United States",
+      "awayTeam": "Paraguay",
+      "homeScore": 4,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "D",
+      "kickoff": "2026-06-13T01:00Z",
+      "homeCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 5,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760418": {
+      "id": "760418",
+      "homeTeam": "Haiti",
+      "awayTeam": "Scotland",
+      "homeScore": 0,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "C",
+      "kickoff": "2026-06-14T01:00Z",
+      "homeCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 3,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760419": {
+      "id": "760419",
+      "homeTeam": "Brazil",
+      "awayTeam": "Morocco",
+      "homeScore": 1,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "C",
+      "kickoff": "2026-06-13T22:00Z",
+      "homeCards": {
+        "yellows": 2,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760420": {
+      "id": "760420",
+      "homeTeam": "Qatar",
+      "awayTeam": "Switzerland",
+      "homeScore": 1,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "B",
+      "kickoff": "2026-06-13T19:00Z",
+      "homeCards": {
+        "yellows": 2,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760421": {
+      "id": "760421",
+      "homeTeam": "Australia",
+      "awayTeam": "Türkiye",
+      "homeScore": 2,
+      "awayScore": 0,
+      "status": "final",
+      "groupId": "D",
+      "kickoff": "2026-06-14T04:00Z",
+      "homeCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760422": {
+      "id": "760422",
+      "homeTeam": "Germany",
+      "awayTeam": "Curaçao",
+      "homeScore": 7,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "E",
+      "kickoff": "2026-06-14T17:00Z",
+      "homeCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760425": {
+      "id": "760425",
+      "homeTeam": "Netherlands",
+      "awayTeam": "Japan",
+      "homeScore": 2,
+      "awayScore": 2,
+      "status": "final",
+      "groupId": "F",
+      "kickoff": "2026-06-14T20:00Z",
+      "homeCards": {
+        "yellows": 3,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      }
     }
-  }
+  },
+  "backfillWatermark": "20260613"
 }

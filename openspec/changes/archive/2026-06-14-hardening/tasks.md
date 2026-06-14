@@ -29,4 +29,4 @@
 ## 5. Verification
 
 - [x] 5.1 Run `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build` locally; all green
-- [ ] 5.2 Push a branch / open a PR and confirm the GitHub Actions run passes end to end
+- [x] 5.2 Push a branch / open a PR and confirm the GitHub Actions run passes end to end
