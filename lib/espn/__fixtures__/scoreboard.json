@@ -1,0 +1,78 @@
+{
+  "events": [
+    {
+      "id": "fix001",
+      "date": "2026-06-11T20:00:00Z",
+      "status": { "type": { "state": "post", "shortDetail": "FT" } },
+      "competitions": [
+        {
+          "altGameNote": "Group A",
+          "competitors": [
+            {
+              "homeAway": "home",
+              "team": { "displayName": "Mexico", "abbreviation": "MEX", "id": "t1" },
+              "score": "2"
+            },
+            {
+              "homeAway": "away",
+              "team": { "displayName": "South Korea", "abbreviation": "KOR", "id": "t2" },
+              "score": "1"
+            }
+          ],
+          "details": [
+            { "type": { "text": "Yellow Card" }, "team": { "id": "t2", "displayName": "South Korea" } },
+            { "type": { "text": "Red Card" }, "team": { "id": "t1", "displayName": "Mexico" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fix002",
+      "date": "2026-06-11T17:00:00Z",
+      "status": { "type": { "state": "in", "shortDetail": "45'" } },
+      "competitions": [
+        {
+          "altGameNote": "Group B",
+          "competitors": [
+            {
+              "homeAway": "home",
+              "team": { "displayName": "Canada", "abbreviation": "CAN", "id": "t3" },
+              "score": "1"
+            },
+            {
+              "homeAway": "away",
+              "team": { "displayName": "Switzerland", "abbreviation": "SUI", "id": "t4" },
+              "score": "0"
+            }
+          ],
+          "details": [
+            { "type": { "text": "Second Yellow Card" }, "team": { "id": "t4", "displayName": "Switzerland" } }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "fix003",
+      "date": "2026-06-11T14:00:00Z",
+      "status": { "type": { "state": "pre" } },
+      "competitions": [
+        {
+          "altGameNote": "Group C",
+          "competitors": [
+            {
+              "homeAway": "home",
+              "team": { "displayName": "Brazil", "abbreviation": "BRA", "id": "t5" },
+              "score": "0"
+            },
+            {
+              "homeAway": "away",
+              "team": { "displayName": "Morocco", "abbreviation": "MAR", "id": "t6" },
+              "score": "0"
+            }
+          ],
+          "details": []
+        }
+      ]
+    }
+  ]
+}

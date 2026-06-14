@@ -1,0 +1,32 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+      - run: npm ci
+      - run: npm run lint
+      - run: npm run typecheck
+      - run: npm run test
+      - run: npm run build
+
+  # Deploy is deferred: the app stores match data in data/cache/matches.json (requires
+  # a writable filesystem volume) and runs an ESPN poller via setInterval in lib/poller.ts
+  # (requires a persistent, long-running process). Both are incompatible with serverless
+  # platforms such as Vercel without a refactor. Enable this job once a persistent host
+  # (e.g. a VPS or container with a mounted volume) is chosen and wired up.
+  deploy:
+    if: false
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo "Deploy not yet configured — see comment above"
