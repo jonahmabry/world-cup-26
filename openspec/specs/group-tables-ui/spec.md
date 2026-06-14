@@ -30,6 +30,19 @@ When the standings engine emits a `tiedPendingRanking` flag for two or more team
 - **WHEN** two teams share a row rank with `tiedPendingRanking: true`
 - **THEN** the UI SHALL display a visual indicator (e.g., "TIE — FIFA World Ranking required") alongside the affected rows
 
+### Requirement: Indicate provisional (live) rows
+The group tables UI SHALL visually indicate any standings row whose result is provisional (reflects an
+in-progress match), so users understand that the row is live and subject to change before full time.
+
+#### Scenario: Live row indicator
+- **WHEN** a standings row is returned with `provisional: true`
+- **THEN** the UI SHALL display a visible LIVE indicator on that row, distinct from the existing
+  qualification color coding and the tied-pending-ranking indicator
+
+#### Scenario: Settled row has no live indicator
+- **WHEN** a standings row is returned with `provisional: false`
+- **THEN** the UI SHALL NOT display the LIVE indicator on that row
+
 ### Requirement: Show per-team stats columns
 Each row in a group table SHALL show: MP (matches played), W, D, L, GF (goals for), GA (goals against), GD (goal difference), Pts.
 
