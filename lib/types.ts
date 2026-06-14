@@ -51,9 +51,12 @@ export interface GroupStandings {
   rows: StandingRow[];
 }
 
+export type KnockoutRound = 'R32' | 'R16' | 'QF' | 'SF' | 'Final';
+
 export type BracketTeam =
   | { kind: 'team'; name: string }
   | { kind: 'tbd-pending-ranking' }
+  | { kind: 'winner-of'; matchId: string }
   | { kind: 'unknown' };
 
 export interface BracketMatchup {
@@ -62,6 +65,11 @@ export interface BracketMatchup {
   away: BracketTeam;
   homeLabel: string;
   awayLabel: string;
+  round: KnockoutRound;
+  slot: number;        // visual position within the round (1 = top of bracket column)
+  venueCity: string;
+  date: string;
+  kickoffTime: string;
 }
 
 export interface Snapshot {

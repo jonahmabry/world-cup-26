@@ -37,8 +37,24 @@ describe('computeBracket', () => {
   const thirds = rankThirds(groups);
   const bracket = computeBracket(groups, thirds);
 
-  it('produces exactly 16 R32 matchups', () => {
-    expect(bracket).toHaveLength(16);
+  it('produces the full 31-match knockout tree (16 R32 + 8 R16 + 4 QF + 2 SF + 1 Final)', () => {
+    expect(bracket).toHaveLength(31);
+    expect(bracket.filter(m => m.round === 'R32')).toHaveLength(16);
+    expect(bracket.filter(m => m.round === 'R16')).toHaveLength(8);
+    expect(bracket.filter(m => m.round === 'QF')).toHaveLength(4);
+    expect(bracket.filter(m => m.round === 'SF')).toHaveLength(2);
+    expect(bracket.filter(m => m.round === 'Final')).toHaveLength(1);
+  });
+
+  describe('R32 matchups carry schedule metadata', () => {
+    it('M73 has round, venueCity, date, kickoffTime', () => {
+      const m = bracket.find((b) => b.matchId === 'M73')!;
+      expect(m.round).toBe('R32');
+      expect(m.venueCity).toBe('Los Angeles');
+      expect(m.date).toBe('JUN 28');
+      expect(m.kickoffTime).toBe('2:00PM');
+      expect(m.slot).toBe(3);
+    });
   });
 
   describe('fixed matchups (no third-place team)', () => {
@@ -92,6 +108,54 @@ describe('computeBracket', () => {
       const m = bracket.find((b) => b.matchId === 'M85')!;
       expect(m.home).toEqual({ kind: 'team', name: 'WB' });
       expect(m.away).toEqual({ kind: 'team', name: '3D' });
+    });
+  });
+
+  describe('R16+ winner-of slots and tree structure', () => {
+    it('M89 (R16): winner-of M74 vs winner-of M77', () => {
+      const m = bracket.find((b) => b.matchId === 'M89')!;
+      expect(m.round).toBe('R16');
+      expect(m.home).toEqual({ kind: 'winner-of', matchId: 'M74' });
+      expect(m.away).toEqual({ kind: 'winner-of', matchId: 'M77' });
+      expect(m.slot).toBe(1);
+    });
+
+    it('M96 (R16): winner-of M85 vs winner-of M87', () => {
+      const m = bracket.find((b) => b.matchId === 'M96')!;
+      expect(m.round).toBe('R16');
+      expect(m.home).toEqual({ kind: 'winner-of', matchId: 'M85' });
+      expect(m.away).toEqual({ kind: 'winner-of', matchId: 'M87' });
+      expect(m.slot).toBe(8);
+    });
+
+    it('M97 (QF): winner-of M89 vs winner-of M90', () => {
+      const m = bracket.find((b) => b.matchId === 'M97')!;
+      expect(m.round).toBe('QF');
+      expect(m.home).toEqual({ kind: 'winner-of', matchId: 'M89' });
+      expect(m.away).toEqual({ kind: 'winner-of', matchId: 'M90' });
+    });
+
+    it('M101 (SF): winner-of M97 vs winner-of M98', () => {
+      const m = bracket.find((b) => b.matchId === 'M101')!;
+      expect(m.round).toBe('SF');
+      expect(m.home).toEqual({ kind: 'winner-of', matchId: 'M97' });
+      expect(m.away).toEqual({ kind: 'winner-of', matchId: 'M98' });
+    });
+
+    it('M104 (Final): winner-of M101 vs winner-of M102', () => {
+      const m = bracket.find((b) => b.matchId === 'M104')!;
+      expect(m.round).toBe('Final');
+      expect(m.home).toEqual({ kind: 'winner-of', matchId: 'M101' });
+      expect(m.away).toEqual({ kind: 'winner-of', matchId: 'M102' });
+      expect(m.venueCity).toBe('New York/New Jersey');
+    });
+
+    it('all R16+ slots have winner-of teams', () => {
+      const later = bracket.filter((m) => m.round !== 'R32');
+      for (const m of later) {
+        expect(m.home.kind).toBe('winner-of');
+        expect(m.away.kind).toBe('winner-of');
+      }
     });
   });
 
