@@ -7,6 +7,7 @@
 import type { BracketMatchup, BracketTeam, GroupId, GroupStandings } from '@/lib/types';
 import type { ThirdsRanking } from './thirds';
 import { getAllocation, type MatchSlot, type ThirdAllocation } from './allocationTable';
+import { KNOCKOUT_SCHEDULE } from './knockoutSchedule';
 
 function winner(g: GroupStandings): BracketTeam {
   const row = g.rows[0];
@@ -50,6 +51,10 @@ function slotPair(
   };
 }
 
+function mNum(id: string) {
+  return parseInt(id.slice(1), 10);
+}
+
 export function computeBracket(
   groups: GroupStandings[],
   thirds: ThirdsRanking,
@@ -57,15 +62,16 @@ export function computeBracket(
   const g = (id: GroupId) => byGroup(groups, id);
   const allocation = getAllocation(thirds.advancingGroupIds as GroupId[]);
 
-  return [
+  // Build R32 team-slotted matchups, then enrich with schedule metadata.
+  const r32Raw = [
     // Fixed matchups (no third-place team)
     { matchId: 'M73', home: runnerUp(g('A')), away: runnerUp(g('B')), homeLabel: 'Runner-up A', awayLabel: 'Runner-up B' },
-    { matchId: 'M75', home: winner(g('F')), away: runnerUp(g('C')), homeLabel: 'Winner F', awayLabel: 'Runner-up C' },
-    { matchId: 'M76', home: winner(g('C')), away: runnerUp(g('F')), homeLabel: 'Winner C', awayLabel: 'Runner-up F' },
+    { matchId: 'M75', home: winner(g('F')),   away: runnerUp(g('C')), homeLabel: 'Winner F',    awayLabel: 'Runner-up C' },
+    { matchId: 'M76', home: winner(g('C')),   away: runnerUp(g('F')), homeLabel: 'Winner C',    awayLabel: 'Runner-up F' },
     { matchId: 'M78', home: runnerUp(g('E')), away: runnerUp(g('I')), homeLabel: 'Runner-up E', awayLabel: 'Runner-up I' },
     { matchId: 'M83', home: runnerUp(g('K')), away: runnerUp(g('L')), homeLabel: 'Runner-up K', awayLabel: 'Runner-up L' },
-    { matchId: 'M84', home: winner(g('H')), away: runnerUp(g('J')), homeLabel: 'Winner H', awayLabel: 'Runner-up J' },
-    { matchId: 'M86', home: winner(g('J')), away: runnerUp(g('H')), homeLabel: 'Winner J', awayLabel: 'Runner-up H' },
+    { matchId: 'M84', home: winner(g('H')),   away: runnerUp(g('J')), homeLabel: 'Winner H',    awayLabel: 'Runner-up J' },
+    { matchId: 'M86', home: winner(g('J')),   away: runnerUp(g('H')), homeLabel: 'Winner J',    awayLabel: 'Runner-up H' },
     { matchId: 'M88', home: runnerUp(g('D')), away: runnerUp(g('G')), homeLabel: 'Runner-up D', awayLabel: 'Runner-up G' },
     // Third-place slots
     { matchId: 'M74', home: winner(g('E')), ...slotPair('M74', 'Winner E', thirds, allocation) },
@@ -77,4 +83,31 @@ export function computeBracket(
     { matchId: 'M85', home: winner(g('B')), ...slotPair('M85', 'Winner B', thirds, allocation) },
     { matchId: 'M87', home: winner(g('K')), ...slotPair('M87', 'Winner K', thirds, allocation) },
   ];
+
+  const r32: BracketMatchup[] = r32Raw.map((m) => {
+    const sched = KNOCKOUT_SCHEDULE[m.matchId]!;
+    return { ...m, round: sched.round, slot: sched.slot, venueCity: sched.venueCity, date: sched.date, kickoffTime: sched.kickoffTime };
+  });
+
+  // Build R16, QF, SF, Final matchups as winner-of slots from the schedule tree.
+  const laterRounds: BracketMatchup[] = Object.entries(KNOCKOUT_SCHEDULE)
+    .filter(([, entry]) => entry.feedsFrom !== null)
+    .sort(([a], [b]) => mNum(a) - mNum(b))
+    .map(([matchId, entry]) => {
+      const [feedA, feedB] = entry.feedsFrom!;
+      return {
+        matchId,
+        home: { kind: 'winner-of' as const, matchId: feedA },
+        away: { kind: 'winner-of' as const, matchId: feedB },
+        homeLabel: `Winner of ${feedA}`,
+        awayLabel: `Winner of ${feedB}`,
+        round: entry.round,
+        slot: entry.slot,
+        venueCity: entry.venueCity,
+        date: entry.date,
+        kickoffTime: entry.kickoffTime,
+      };
+    });
+
+  return [...r32, ...laterRounds];
 }

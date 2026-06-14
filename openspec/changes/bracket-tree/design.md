@@ -57,8 +57,8 @@ dependency for a fixed 5-column layout; CSS grid/flex is sufficient.
 - **Schedule data entered wrong (feeds/venues/times)** → source only from the official FIFA 2026 fixture
   list; add a self-consistency check (every non-R32 match's `feedsFrom` references two valid earlier
   matches; the tree forms a single root at M104) and a unit test on the structure.
-- **Time zone / format ambiguity** → store a displayable local kickoff string (venue-local) plus the date;
-  the UI formats `MON DD` / `H:MMAM/PM` and does no timezone math.
+- **Time zone / format ambiguity** → store a displayable CDT kickoff string (all times converted from
+  venue-local at data-entry time); the UI formats `MON DD` / `H:MMAM/PM` and does no timezone math.
 - **Tree CSS complexity across rounds** → keep it a static 5-column layout sized to 16/8/4/2/1 cards;
   acceptable for desktop-first per the blueprint.
 
