@@ -70,7 +70,7 @@ We **compute standings ourselves** rather than trust any provider's standings en
 
 ---
 
-## Stats section (Phase 2)
+## Stats section (Phase 4)
 
 **Included:** goals, assists, rating, shots, saves, yellow cards, red cards, second-yellow (yellow-red), games played, games started, minutes played.
 - `rating` is API-Football's computed number; it can be null until shortly after a match finalizes.
@@ -99,10 +99,16 @@ We **compute standings ourselves** rather than trust any provider's standings en
 
 ## Build sequencing
 
-**Phase 1 (build first — useful during the live group stage):**
+**Phase 1 (done — useful during the live group stage):**
 scaffold → ESPN ingestion → standings/tiebreaker engine → color-coded group tables → projected bracket (incl. the FIFA seeding table).
 
-**Phase 2 (add after):**
+**Phase 2 (fix-first — correct the live data, then add the safety net):**
+`data-accuracy` (full-tournament backfill + provisional/live standings; ships with its own engine tests) → `hardening` (regression coverage for the untouched engine modules + GitHub Actions CI).
+
+**Phase 3:**
+`bracket-tree` — extend the bracket to the full knockout tree (R32 → Final) with a connected bracket diagram.
+
+**Phase 4 (add after):**
 API-Football integration → full stats section.
 
 ---

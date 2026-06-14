@@ -1,0 +1,60 @@
+## MODIFIED Requirements
+
+### Requirement: Compute a deterministic snapshot bracket
+The system SHALL compute a projected knockout bracket representing the draw "if the group stage ended at
+this moment." The bracket SHALL cover the full knockout tree — Round of 32 (M73–M88), Round of 16
+(M89–M96), Quarter-finals (M97–M100), Semi-finals (M101–M102), and the Final (M104); the third-place
+play-off (M103) is excluded. The Round of 32 SHALL be recomputed on every refresh from the current
+standings snapshot; later rounds are fixed structural slots referencing the winners of prior matches.
+
+#### Scenario: Bracket computed from current standings
+- **WHEN** a refresh is triggered
+- **THEN** the bracket module SHALL read the current standings (top-2 per group + 8 best thirds) and
+  produce the Round-of-32 matchups, plus the R16, QF, SF, and Final matchups that build on them
+
+#### Scenario: Snapshot label
+- **WHEN** the bracket is rendered
+- **THEN** the UI SHALL display a label such as "Projected bracket — if the group stage ended now" to
+  communicate the snapshot nature
+
+#### Scenario: Later rounds do not change with group results
+- **WHEN** group standings change between refreshes
+- **THEN** the R32 team slots SHALL update, while R16-and-later slots SHALL remain winner-of references
+  (they depend on knockout results, not standings)
+
+## ADDED Requirements
+
+### Requirement: Project later rounds as winner-of references
+Each Round-of-16, Quarter-final, Semi-final, and Final slot SHALL be expressed as a reference to the
+winner of a specific earlier match, identified by that match's number, rather than a team name. The
+feed structure (which two matches feed each later match) SHALL come from the official FIFA 2026 knockout
+schedule.
+
+#### Scenario: Winner-of slot rendering
+- **WHEN** a bracket slot belongs to a match in R16 or later
+- **THEN** that slot SHALL display the winner-of reference for its feeding match (e.g. "W74") until that
+  match resolves
+
+#### Scenario: Feed structure forms one tree
+- **WHEN** the bracket is computed
+- **THEN** every non-R32 match SHALL reference exactly two valid earlier matches, and the structure SHALL
+  resolve to a single Final (M104)
+
+### Requirement: Display host city, date, and kickoff time per match
+Every match in the bracket SHALL carry and display its host city, date, and kickoff time, sourced from the
+official FIFA 2026 schedule and keyed by match number.
+
+#### Scenario: Card shows venue and schedule
+- **WHEN** a bracket match card is rendered
+- **THEN** it SHALL show the host city (e.g. "Los Angeles", "New York/New Jersey") and the date and
+  kickoff time (e.g. "JUN 30" above "3:30PM")
+
+### Requirement: Render the bracket as a connected tree
+The bracket UI SHALL render the matches as a connected tree organized by round (R32 → R16 → QF → SF →
+Final), so the path from the Round of 32 to the Final is visually apparent, rather than as an unordered
+grid of cards.
+
+#### Scenario: Round-organized layout
+- **WHEN** the bracket page is rendered
+- **THEN** matches SHALL be grouped into per-round columns in knockout order with each later-round match
+  positioned relative to the two matches that feed it
