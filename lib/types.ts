@@ -43,6 +43,7 @@ export interface StandingRow {
   fairPlay: number;
   qualStatus: 'auto' | 'best-third' | 'eliminated' | 'pending';
   tiedPendingRanking: boolean;
+  provisional: boolean;
 }
 
 export interface GroupStandings {

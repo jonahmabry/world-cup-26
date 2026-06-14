@@ -1,5 +1,16 @@
 import type { GroupId } from '@/lib/types';
 
+// ESPN displayName → canonical name used in GROUPS below.
+const ESPN_TEAM_NAMES: Record<string, string> = {
+  'United States': 'USA',
+  'Bosnia-Herzegovina': 'Bosnia and Herzegovina',
+  'Congo DR': 'DR Congo',
+};
+
+export function normalizeTeamName(name: string): string {
+  return ESPN_TEAM_NAMES[name] ?? name;
+}
+
 // 2026 FIFA World Cup group membership — confirmed from the December 5, 2025 draw.
 export const GROUPS: Record<GroupId, string[]> = {
   A: ['Mexico', 'South Korea', 'South Africa', 'Czechia'],

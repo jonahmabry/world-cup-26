@@ -158,8 +158,16 @@ export function computeGroupStandings(allMatches: MatchResult[]): GroupStandings
     );
 
     const groupMatches = allMatches.filter(
-      (m) => m.groupId === groupId && m.status === 'final',
+      (m) => m.groupId === groupId && (m.status === 'final' || m.status === 'in-progress'),
     );
+
+    const provisionalTeams = new Set<string>();
+    for (const m of groupMatches) {
+      if (m.status === 'in-progress') {
+        provisionalTeams.add(m.homeTeam);
+        provisionalTeams.add(m.awayTeam);
+      }
+    }
 
     for (const m of groupMatches) {
       const home = statsMap.get(m.homeTeam);
@@ -201,6 +209,7 @@ export function computeGroupStandings(allMatches: MatchResult[]): GroupStandings
       fairPlay: fairPlayScore({ yellows: s.yellows, reds: s.reds, secondYellows: s.secondYellows }),
       qualStatus: 'pending' as const,
       tiedPendingRanking: pending.has(s.team),
+      provisional: provisionalTeams.has(s.team),
     }));
 
     return { groupId, rows };

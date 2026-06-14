@@ -1,4 +1,5 @@
 import { describe, it, expect } from 'vitest';
+import type { GroupId } from '@/lib/types';
 import { getAllocation, allocationKey, isAllocationComplete } from './allocationTable';
 
 describe('allocationTable', () => {
@@ -30,7 +31,7 @@ describe('allocationTable', () => {
 
   it('returns null for an unknown combination', () => {
     // Passing only 7 groups yields a key not in the table
-    expect(getAllocation(['A', 'B', 'C', 'D', 'E', 'F', 'G'] as any)).toBeNull();
+    expect(getAllocation(['A', 'B', 'C', 'D', 'E', 'F', 'G'] as GroupId[])).toBeNull();
   });
 
   it('each allocation is a permutation of its 8 qualifying groups', () => {

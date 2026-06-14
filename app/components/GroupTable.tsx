@@ -36,6 +36,11 @@ export function GroupTable({ standings }: { standings: GroupStandings }) {
               <td className="px-3 py-2 text-slate-400 text-xs">{row.position}</td>
               <td className="px-3 py-2 font-medium text-slate-100">
                 {row.team}
+                {row.provisional && (
+                  <span className="ml-2 text-[10px] text-emerald-400 font-bold tracking-wide">
+                    LIVE
+                  </span>
+                )}
                 {row.tiedPendingRanking && (
                   <span className="ml-2 text-[10px] text-yellow-400 font-normal">
                     TIE

@@ -1,5 +1,5 @@
 import type { CardCounts, GroupId, MatchResult, MatchStatus } from '@/lib/types';
-import { isValidGroup } from '@/lib/engine/groups';
+import { isValidGroup, normalizeTeamName } from '@/lib/engine/groups';
 
 const SCOREBOARD_URL =
   'https://site.api.espn.com/apis/site/v2/sports/soccer/fifa.world/scoreboard';
@@ -99,8 +99,8 @@ function parseEvent(event: EspnEvent): MatchResult | null {
 
   return {
     id: event.id,
-    homeTeam: home.team.displayName,
-    awayTeam: away.team.displayName,
+    homeTeam: normalizeTeamName(home.team.displayName),
+    awayTeam: normalizeTeamName(away.team.displayName),
     homeScore: parseInt(home.score ?? '0', 10) || 0,
     awayScore: parseInt(away.score ?? '0', 10) || 0,
     status,
@@ -109,6 +109,47 @@ function parseEvent(event: EspnEvent): MatchResult | null {
     homeCards: parseCards(comp, home.team.id),
     awayCards: parseCards(comp, away.team.id),
   };
+}
+
+export function formatDate(date: Date): string {
+  const y = date.getUTCFullYear();
+  const m = String(date.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(date.getUTCDate()).padStart(2, '0');
+  return `${y}${m}${d}`;
+}
+
+// Fetch all World Cup matches within an inclusive date range.
+// If ESPN ever truncates a range response, fall back to per-day loops via fetchScoreboard(dateYYYYMMDD).
+export async function fetchScoreboardRange(
+  startYYYYMMDD: string,
+  endYYYYMMDD: string,
+): Promise<MatchResult[]> {
+  const url = `${SCOREBOARD_URL}?dates=${startYYYYMMDD}-${endYYYYMMDD}`;
+
+  let res: Response;
+  try {
+    res = await fetch(url, { next: { revalidate: 0 } });
+  } catch (err) {
+    throw new EspnError(`ESPN range fetch failed: ${String(err)}`);
+  }
+
+  if (!res.ok) {
+    throw new EspnError(`ESPN returned ${res.status}`);
+  }
+
+  let body: { events?: EspnEvent[] };
+  try {
+    body = await res.json();
+  } catch {
+    throw new EspnError('ESPN returned non-JSON');
+  }
+
+  const results: MatchResult[] = [];
+  for (const event of body.events ?? []) {
+    const match = parseEvent(event);
+    if (match) results.push(match);
+  }
+  return results;
 }
 
 export async function fetchScoreboard(dateYYYYMMDD?: string): Promise<MatchResult[]> {
