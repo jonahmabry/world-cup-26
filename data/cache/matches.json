@@ -1,0 +1,62 @@
+{
+  "760418": {
+    "id": "760418",
+    "homeTeam": "Haiti",
+    "awayTeam": "Scotland",
+    "homeScore": 0,
+    "awayScore": 1,
+    "status": "final",
+    "groupId": "C",
+    "kickoff": "2026-06-14T01:00Z",
+    "homeCards": {
+      "yellows": 1,
+      "reds": 0,
+      "secondYellows": 0
+    },
+    "awayCards": {
+      "yellows": 3,
+      "reds": 0,
+      "secondYellows": 0
+    }
+  },
+  "760419": {
+    "id": "760419",
+    "homeTeam": "Brazil",
+    "awayTeam": "Morocco",
+    "homeScore": 1,
+    "awayScore": 1,
+    "status": "final",
+    "groupId": "C",
+    "kickoff": "2026-06-13T22:00Z",
+    "homeCards": {
+      "yellows": 2,
+      "reds": 0,
+      "secondYellows": 0
+    },
+    "awayCards": {
+      "yellows": 0,
+      "reds": 0,
+      "secondYellows": 0
+    }
+  },
+  "760420": {
+    "id": "760420",
+    "homeTeam": "Qatar",
+    "awayTeam": "Switzerland",
+    "homeScore": 1,
+    "awayScore": 1,
+    "status": "final",
+    "groupId": "B",
+    "kickoff": "2026-06-13T19:00Z",
+    "homeCards": {
+      "yellows": 2,
+      "reds": 0,
+      "secondYellows": 0
+    },
+    "awayCards": {
+      "yellows": 1,
+      "reds": 0,
+      "secondYellows": 0
+    }
+  }
+}
