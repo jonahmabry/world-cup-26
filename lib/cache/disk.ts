@@ -3,16 +3,27 @@ import path from 'path';
 import type { MatchResult } from '@/lib/types';
 import { normalizeTeamName } from '@/lib/engine/groups';
 
-const CACHE_PATH = path.join(process.cwd(), 'data', 'cache', 'matches.json');
+// Seed data committed to the repo (read-only inside the deployment bundle).
+const SEED_PATH = path.join(process.cwd(), 'data', 'cache', 'matches.json');
+
+// On Vercel (and most serverless hosts) the deployment filesystem is read-only
+// except for /tmp. Writing under process.cwd() throws EROFS and crashes the request,
+// so on Vercel we write to /tmp and fall back to the bundled seed for reads.
+// Note: /tmp is ephemeral and per-instance — finals are re-derived from ESPN on every
+// pipeline run anyway, so disk is only a best-effort cache, not the source of truth.
+const WRITABLE_DIR = process.env.VERCEL
+  ? path.join('/tmp', 'wc26-cache')
+  : path.join(process.cwd(), 'data', 'cache');
+const CACHE_PATH = path.join(WRITABLE_DIR, 'matches.json');
 
 interface CacheFile {
   matches: Record<string, MatchResult>;
   backfillWatermark: string | null;
 }
 
-function readCacheFile(): CacheFile {
+function readFrom(filePath: string): CacheFile | null {
   try {
-    const raw = fs.readFileSync(CACHE_PATH, 'utf-8');
+    const raw = fs.readFileSync(filePath, 'utf-8');
     const parsed = JSON.parse(raw) as Record<string, unknown>;
     // Handle legacy flat format where all keys are match IDs (no 'matches' wrapper)
     if (!('matches' in parsed)) {
@@ -20,13 +31,24 @@ function readCacheFile(): CacheFile {
     }
     return parsed as unknown as CacheFile;
   } catch {
-    return { matches: {}, backfillWatermark: null };
+    return null;
   }
 }
 
+function readCacheFile(): CacheFile {
+  // Prefer the writable copy (/tmp on Vercel); fall back to the bundled seed on cold starts.
+  return readFrom(CACHE_PATH) ?? readFrom(SEED_PATH) ?? { matches: {}, backfillWatermark: null };
+}
+
 function writeCacheFile(file: CacheFile): void {
-  fs.mkdirSync(path.dirname(CACHE_PATH), { recursive: true });
-  fs.writeFileSync(CACHE_PATH, JSON.stringify(file, null, 2), 'utf-8');
+  try {
+    fs.mkdirSync(WRITABLE_DIR, { recursive: true });
+    fs.writeFileSync(CACHE_PATH, JSON.stringify(file, null, 2), 'utf-8');
+  } catch (err) {
+    // Read-only or otherwise unwritable FS: degrade to recompute-from-source rather than
+    // crashing the request. Finals are re-derived from ESPN on each pipeline run.
+    console.error('[disk cache] write failed, continuing without persistence:', err);
+  }
 }
 
 export function readDiskCache(): MatchResult[] {
