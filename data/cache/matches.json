@@ -220,6 +220,26 @@
         "secondYellows": 0
       }
     },
+    "760423": {
+      "id": "760423",
+      "homeTeam": "Ivory Coast",
+      "awayTeam": "Ecuador",
+      "homeScore": 1,
+      "awayScore": 0,
+      "status": "final",
+      "groupId": "E",
+      "kickoff": "2026-06-14T23:00Z",
+      "homeCards": {
+        "yellows": 3,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
     "760425": {
       "id": "760425",
       "homeTeam": "Netherlands",
@@ -239,7 +259,47 @@
         "reds": 0,
         "secondYellows": 0
       }
+    },
+    "760426": {
+      "id": "760426",
+      "homeTeam": "Belgium",
+      "awayTeam": "Egypt",
+      "homeScore": 1,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "G",
+      "kickoff": "2026-06-15T19:00Z",
+      "homeCards": {
+        "yellows": 2,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 2,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760428": {
+      "id": "760428",
+      "homeTeam": "Spain",
+      "awayTeam": "Cape Verde",
+      "homeScore": 0,
+      "awayScore": 0,
+      "status": "final",
+      "groupId": "H",
+      "kickoff": "2026-06-15T16:00Z",
+      "homeCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      }
     }
   },
-  "backfillWatermark": "20260613"
+  "backfillWatermark": "20260614"
 }
