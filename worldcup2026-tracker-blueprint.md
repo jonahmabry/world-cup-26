@@ -113,6 +113,31 @@ API-Football integration → full stats section.
 
 ---
 
+## Roadmap — OpenSpec change order (post-Phase 3)
+
+The app is evolving from a single-user localhost tracker into a **multi-user bracket-challenge app**.
+The original "no database" constraint is **superseded** from the `bracket-challenge` change onward.
+Upcoming OpenSpec changes, in run order:
+
+1. **`fix-tiebreaker-and-bracket`** _(now — live-tournament fix)_ — implement the FIFA World Ranking as
+   the Step-3 tiebreaker (frozen snapshot) so tied runner-ups and the 8 best third-placed teams stop
+   rendering as "TBD" and the projected bracket repopulates; also harden the group-table layout so a
+   `LIVE`/`TIE` badge can't clip the **Pts** column.
+2. **`node-24-upgrade`** — move CI + local engines to Node 24 (the Node 20 GitHub Actions runtime is
+   deprecated).
+3. **`release-automation`** — adopt Changesets for automated version bumps, changelog, and GitHub
+   Releases; reconcile current `package.json`/`CHANGELOG.md` drift.
+4. **`country-flags`** — SVG flags next to each country, keyed by code (handles the England/Scotland/Wales
+   home nations; emoji flags don't render on Windows).
+5. **`stats-section`** — Phase 4: API-Football integration and the full player-stats section.
+6. **`bracket-challenge`** — March-Madness-style knockout bracket challenge: **Supabase** auth + Postgres,
+   per-user picks locked at the first Round-of-32 kickoff, round-weighted scoring (more points for deeper
+   rounds), and a global leaderboard. **Retires the "no database" rule.**
+7. **`live-ranking-bracket`** — bracket and standings react to FIFA's **live** World-Ranking projection
+   as scores change (the live counterpart to the frozen snapshot introduced in change 1).
+
+---
+
 ## Open verification items (resolve at build time — not assumptions)
 
 1. API-Football free tier actually serves the **live 2026 season** (not paywalled).

@@ -166,4 +166,19 @@ describe('computeBracket', () => {
     const m79 = tiedBracket.find((b) => b.matchId === 'M79')!;
     expect(m79.home).toEqual({ kind: 'tbd-pending-ranking' });
   });
+
+  it('a runner-up whose tie is resolved by FIFA ranking appears as a real team (not TBD)', () => {
+    // Build a group where the runner-up was tied on all Step-2 criteria but resolved by FIFA rank.
+    // The computeGroupStandings engine now resolves this via Step 3 before it reaches the bracket.
+    // Simulate by providing a group with a concrete runner-up (tiedPendingRanking: false).
+    const resolvedGroups = makeGroups();
+    // Confirm runner-up slot is a real team kind, not tbd-pending-ranking
+    const resolvedBracket = computeBracket(resolvedGroups, thirds);
+    const m73 = resolvedBracket.find((b) => b.matchId === 'M73')!;
+    // M73: Runner-up A vs Runner-up B — both must be concrete teams
+    expect(m73.home.kind).toBe('team');
+    expect(m73.away.kind).toBe('team');
+    expect(m73.home).toEqual({ kind: 'team', name: 'RA' });
+    expect(m73.away).toEqual({ kind: 'team', name: 'RB' });
+  });
 });

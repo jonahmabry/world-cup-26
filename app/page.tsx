@@ -35,9 +35,7 @@ export default async function StandingsPage() {
         <span className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-sm bg-red-900 inline-block" /> Eliminated
         </span>
-        <span className="flex items-center gap-1.5 text-yellow-400">
-          <span>TIE</span> = FIFA World Ranking required
-        </span>
+
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -74,9 +72,6 @@ export default async function StandingsPage() {
                     <td className="py-1.5 px-2">{i + 1}</td>
                     <td className="py-1.5 px-2 font-medium">
                       {row.team}
-                      {row.tiedPendingRanking && (
-                        <span className="ml-2 text-[10px] text-yellow-400">TIE</span>
-                      )}
                     </td>
                     <td className="py-1.5 px-2 text-slate-400">{row.groupId}</td>
                     <td className="py-1.5 px-2 text-center">{row.pts}</td>

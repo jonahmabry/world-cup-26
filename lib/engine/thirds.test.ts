@@ -109,4 +109,21 @@ describe('rankThirds', () => {
     const bIdx = allThirds.findIndex((r) => r.team === 'TB');
     expect(aIdx).toBeLessThan(bIdx); // A (no cards) ranks above B (1 yellow)
   });
+
+  it('Step 3 FIFA ranking resolves a cross-group third-place tie: no tiedPendingRanking', () => {
+    // Mexico (FIFA rank 15, Group A) and South Korea (FIFA rank 22, Group B) as third-place teams,
+    // tied on pts/GD/GF/fair-play → Step 3 should put Mexico above South Korea, neither flagged.
+    const groups: GroupStandings[] = GROUP_IDS.map((id) => {
+      // Give A and B both 3pts with identical GD/GF/cards; everyone else gets distinct higher pts
+      const teamName = id === 'A' ? 'Mexico' : id === 'B' ? 'South Korea' : `T${id}`;
+      const pts = id === 'A' || id === 'B' ? 3 : 12 - GROUP_IDS.indexOf(id);
+      return makeGroup(id, makeThird(teamName, id, pts, 0, 1));
+    });
+    const { allThirds } = rankThirds(groups);
+    const mexIdx = allThirds.findIndex((r) => r.team === 'Mexico');
+    const skIdx = allThirds.findIndex((r) => r.team === 'South Korea');
+    expect(mexIdx).toBeLessThan(skIdx); // Mexico (rank 15) above South Korea (rank 22)
+    expect(allThirds[mexIdx].tiedPendingRanking).toBe(false);
+    expect(allThirds[skIdx].tiedPendingRanking).toBe(false);
+  });
 });
