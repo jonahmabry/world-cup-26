@@ -299,7 +299,27 @@
         "reds": 0,
         "secondYellows": 0
       }
+    },
+    "760429": {
+      "id": "760429",
+      "homeTeam": "Saudi Arabia",
+      "awayTeam": "Uruguay",
+      "homeScore": 1,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "H",
+      "kickoff": "2026-06-15T22:00Z",
+      "homeCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      }
     }
   },
-  "backfillWatermark": "20260614"
+  "backfillWatermark": "20260615"
 }
