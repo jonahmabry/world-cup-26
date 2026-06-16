@@ -16,7 +16,9 @@
 //   c. Highest team conduct score (yellow=-1, red=-3, second-yellow=-3; higher is better)
 //
 // Step 3 — if Steps 1 and 2 yield no decision:
-//   FIFA/Coca-Cola Men's World Ranking → emits tiedPendingRanking=true
+//   FIFA/Coca-Cola Men's World Ranking (frozen snapshot, see ./fifaRanking) → lower
+//   position ranks above. tiedPendingRanking is emitted ONLY when the ranking cannot
+//   separate the teams (equal position or a team absent from the snapshot).
 //   (https://inside.fifa.com/fifa-world-ranking/men)
 //
 // Note: The 2026 regulations replaced the previous "drawing of lots" with FIFA World Ranking.
@@ -24,6 +26,7 @@
 import type { GroupId, GroupStandings, MatchResult, StandingRow } from '@/lib/types';
 import { fairPlayScore, GROUP_IDS } from '@/lib/types';
 import { GROUPS } from './groups';
+import { fifaRank } from './fifaRanking';
 
 interface TeamStats {
   team: string;
@@ -77,7 +80,8 @@ function computeH2HMiniLeague(teams: TeamStats[], groupMatches: MatchResult[]): 
   return h2h;
 }
 
-// Step 2: overall GD → GS → fair-play. Marks still-tied teams as tiedPendingRanking.
+// Step 2: overall GD → GS → fair-play → Step 3: FIFA World Ranking.
+// Marks still-tied teams as tiedPendingRanking only when Step 3 also fails (equal rank).
 function applyOverall(teams: TeamStats[], pending: Set<string>): TeamStats[] {
   const sorted = [...teams].sort((a, b) => {
     const aGD = a.gf - a.ga, bGD = b.gf - b.ga;
@@ -86,20 +90,23 @@ function applyOverall(teams: TeamStats[], pending: Set<string>): TeamStats[] {
     const aFP = fairPlayScore({ yellows: a.yellows, reds: a.reds, secondYellows: a.secondYellows });
     const bFP = fairPlayScore({ yellows: b.yellows, reds: b.reds, secondYellows: b.secondYellows });
     if (aFP !== bFP) return bFP - aFP;
-    return 0;
+    // Step 3: FIFA World Ranking (lower position = better)
+    return fifaRank(a.team) - fifaRank(b.team);
   });
 
-  // Mark any sub-groups still tied through all Step 2 criteria
+  // Mark any sub-groups still tied through Step 2 AND Step 3 (same FIFA rank — extremely rare)
   let i = 0;
   while (i < sorted.length) {
     const ai = sorted[i];
     const aGD = ai.gf - ai.ga;
     const aFP = fairPlayScore({ yellows: ai.yellows, reds: ai.reds, secondYellows: ai.secondYellows });
+    const aRank = fifaRank(ai.team);
     let j = i + 1;
     while (j < sorted.length) {
       const aj = sorted[j];
       if (aj.gf - aj.ga === aGD && aj.gf === ai.gf &&
-          fairPlayScore({ yellows: aj.yellows, reds: aj.reds, secondYellows: aj.secondYellows }) === aFP) j++;
+          fairPlayScore({ yellows: aj.yellows, reds: aj.reds, secondYellows: aj.secondYellows }) === aFP &&
+          fifaRank(aj.team) === aRank) j++;
       else break;
     }
     if (j - i > 1) {

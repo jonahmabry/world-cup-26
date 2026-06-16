@@ -1,15 +1,23 @@
 import type { GroupId, GroupStandings, StandingRow } from '@/lib/types';
 import { fairPlayScore } from '@/lib/types';
+import { fifaRank } from './fifaRanking';
 
 // Cross-group ranking uses the same criteria as within-group, except H2H is
 // omitted (third-place teams from different groups never played each other).
-// Order: points → GD → GS → fair-play → FIFA World Ranking (tiedPendingRanking).
+// Order: points → GD → GS → fair-play → FIFA World Ranking (Step 3).
 function compareThirds(a: StandingRow, b: StandingRow): number {
   if (a.pts !== b.pts) return b.pts - a.pts;
   if (a.gd !== b.gd) return b.gd - a.gd;
   if (a.gf !== b.gf) return b.gf - a.gf;
   if (a.fairPlay !== b.fairPlay) return b.fairPlay - a.fairPlay;
-  return 0; // tiedPendingRanking handled by caller
+  // Step 3: FIFA World Ranking (lower position = better)
+  return fifaRank(a.team) - fifaRank(b.team);
+}
+
+// Returns true only when compareThirds cannot separate two rows (equal rank — extremely rare).
+function thirdsStillTied(a: StandingRow, b: StandingRow): boolean {
+  return a.pts === b.pts && a.gd === b.gd && a.gf === b.gf &&
+    a.fairPlay === b.fairPlay && fifaRank(a.team) === fifaRank(b.team);
 }
 
 export interface ThirdsRanking {
@@ -28,18 +36,13 @@ export function rankThirds(groupStandings: GroupStandings[]): ThirdsRanking {
       fairPlay: fairPlayScore(r.cards),
     }));
 
-  allThirds.sort((a, b) => {
-    const cmp = compareThirds(a, b);
-    if (cmp !== 0) return cmp;
-    // Both are tied through fair-play → mark both
-    return 0;
-  });
+  allThirds.sort((a, b) => compareThirds(a, b));
 
-  // Mark tiedPendingRanking for rows that are equal through all criteria
+  // Mark tiedPendingRanking only when Step 3 (FIFA rank) also cannot separate two rows
   for (let i = 0; i < allThirds.length; i++) {
     const tied =
-      (i > 0 && compareThirds(allThirds[i - 1], allThirds[i]) === 0) ||
-      (i < allThirds.length - 1 && compareThirds(allThirds[i], allThirds[i + 1]) === 0);
+      (i > 0 && thirdsStillTied(allThirds[i - 1], allThirds[i])) ||
+      (i < allThirds.length - 1 && thirdsStillTied(allThirds[i], allThirds[i + 1]));
     if (tied) allThirds[i] = { ...allThirds[i], tiedPendingRanking: true };
   }
 

@@ -87,9 +87,9 @@ describe('tiebreaker Step 2 – overall stats and tiedPendingRanking', () => {
     expect(groupA.rows[1].team).toBe('Mexico');
   });
 
-  it('tiedPendingRanking: teams equal through all criteria are flagged', () => {
-    // Mexico 0-0 SK (both 1pt), SA 1-0 CZ (SA 3pts — breaks the bottom-pair tie)
-    // Mexico and SK are still equal through all criteria → both flagged; SA is not
+  it('Step 3 FIFA ranking resolves a dead-heat: better-ranked team wins, no tiedPendingRanking', () => {
+    // Mexico 0-0 SK (both 1pt, equal all other criteria)
+    // Step 3: Mexico FIFA rank 15 < SK FIFA rank 22 → Mexico above SK, neither flagged
     const matches = [
       makeMatch('m1', 'Mexico', 'South Korea', 0, 0),
       makeMatch('m2', 'South Africa', 'Czechia', 1, 0),
@@ -97,8 +97,12 @@ describe('tiebreaker Step 2 – overall stats and tiedPendingRanking', () => {
     const groupA = computeGroupStandings(matches).find((g) => g.groupId === 'A')!;
     const mexico = groupA.rows.find((r) => r.team === 'Mexico')!;
     const sk = groupA.rows.find((r) => r.team === 'South Korea')!;
-    expect(mexico.tiedPendingRanking).toBe(true);
-    expect(sk.tiedPendingRanking).toBe(true);
+    // Mexico should rank above South Korea (better FIFA rank)
+    expect(groupA.rows.indexOf(mexico)).toBeLessThan(groupA.rows.indexOf(sk));
+    // Neither should be flagged — Step 3 resolved the tie
+    expect(mexico.tiedPendingRanking).toBe(false);
+    expect(sk.tiedPendingRanking).toBe(false);
+    // South Africa (3pts, unambiguous) is also not flagged
     expect(groupA.rows.find((r) => r.team === 'South Africa')!.tiedPendingRanking).toBe(false);
   });
 
