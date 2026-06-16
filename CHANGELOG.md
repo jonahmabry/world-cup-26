@@ -12,12 +12,16 @@ the tournament-stable public launch.
 
 Upcoming changes, in planned order:
 
-- `node-24-upgrade` — move CI + local engines to Node 24 (Node 20 GitHub Actions runtime is deprecated)
 - `release-automation` — adopt Changesets for automated version bumps, changelog, and GitHub Releases
 - `country-flags` — SVG flags next to each country name (handles England/Scotland/Wales)
 - `stats-section` — Phase 4: API-Football integration and the full player-stats section
 - `bracket-challenge` — March Madness-style bracket challenge with user accounts and a leaderboard (Supabase)
 - `live-ranking-bracket` — bracket/standings react to FIFA's live World Ranking projection as scores change
+
+## [0.1.3] - 2026-06-16
+
+### Changed
+- Move CI and local engines to Node 24 LTS; add `engines.node >=24.0.0` to `package.json`, `.nvmrc` (24), and bump `@types/node` to `^24` (Node 20 GitHub Actions runtime is deprecated)
 
 ## [0.1.2] - 2026-06-15
 
