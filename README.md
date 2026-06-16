@@ -33,7 +33,7 @@ Live group standings, projected knockout bracket, and match scores for the FIFA 
 
 ## Local development
 
-**Prerequisites:** Node.js 20+, npm
+**Prerequisites:** Node.js 24+, npm
 
 ```bash
 git clone https://github.com/jonahmabry/world-cup-26.git
