@@ -54,11 +54,6 @@ export function GroupTable({ standings }: { standings: GroupStandings }) {
                       LIVE
                     </span>
                   )}
-                  {row.tiedPendingRanking && (
-                    <span className="shrink-0 text-[10px] text-yellow-400 font-normal">
-                      TIE
-                    </span>
-                  )}
                 </span>
               </td>
               <td className="px-1 py-2 text-center text-slate-300 whitespace-nowrap">{row.mp}</td>
