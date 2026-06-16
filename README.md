@@ -2,7 +2,7 @@
 
 Live group standings, projected knockout bracket, and match scores for the FIFA World Cup 2026 — updated on every page load from the ESPN API.
 
-**Live site:** https://world-cup-26.vercel.app
+**Live site:** [https://world-cup-26-pi.vercel.app](https://world-cup-26-pi.vercel.app/)
 
 ---
 
