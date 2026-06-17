@@ -29,4 +29,4 @@
 - [x] 5.4 Dry-run `npm run version`: confirm `package.json` 0.1.3 → 0.1.4 and a correctly-formatted entry prepended **above** the preserved history; then `git restore package.json CHANGELOG.md` and delete the consumed changeset's regeneration (restore the `.changeset/*.md`)
 - [x] 5.5 Validate `release.yml` YAML; confirm Node-24 setup matches `ci.yml`
 - [x] 5.6 Push branch / open PR; confirm CI is green
-- [ ] 5.7 Post-merge baseline: confirm the "Version Packages" bot PR appears and, on merge, a git tag + GitHub Release are created
+- [x] 5.7 Post-merge baseline: confirm the "Version Packages" bot PR appears and, on merge, a git tag + GitHub Release are created
