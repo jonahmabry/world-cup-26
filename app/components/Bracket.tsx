@@ -1,4 +1,5 @@
 import type { BracketMatchup, BracketTeam, KnockoutRound } from '@/lib/types';
+import { Flag } from './Flag';
 
 // Pixel constants for the bracket tree layout.
 // SLOT_H: height (px) allocated to each R32 slot; cards in later rounds span multiples of this.
@@ -22,7 +23,12 @@ function TeamSlot({ team, label }: { team: BracketTeam; label: string }) {
   if (team.kind === 'unknown') {
     return <div className="text-slate-500 text-[11px] italic truncate">{label}</div>;
   }
-  return <div className="text-slate-100 font-medium text-xs truncate">{team.name}</div>;
+  return (
+    <div className="flex items-center gap-1 min-w-0">
+      <Flag name={team.name} />
+      <span className="text-slate-100 font-medium text-xs truncate">{team.name}</span>
+    </div>
+  );
 }
 
 function MatchCard({ matchup }: { matchup: BracketMatchup }) {
