@@ -127,5 +127,5 @@ The app is deployed to Vercel via the GitHub integration. Every push to `master`
 
 - **Branch policy:** always create a feature branch before editing; never commit directly to `master`
 - **Changes are spec-driven:** see `openspec/` for proposals, designs, task lists, and delta specs for every shipped change
-- **Changelog:** `CHANGELOG.md` follows Keep a Changelog; versioning follows SemVer (pre-1.0: breaking = minor bump, features/fixes = patch)
+- **Changelog and releases:** managed by [Changesets](https://github.com/changesets/changesets). When making a user-facing change, run `npx changeset` to record a release note (choose `minor` for breaking changes, `patch` for features/fixes — `major` is reserved for the `1.0.0` launch). The CI release workflow opens a "Version Packages" PR that tags and creates a GitHub Release on merge.
 - **Tests:** co-located with source (`*.test.ts`); run in CI on every push and PR

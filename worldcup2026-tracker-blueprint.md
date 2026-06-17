@@ -107,22 +107,22 @@ The app is evolving from a single-user localhost tracker into a **multi-user bra
 - **Phase 3** — `bracket-tree` (full knockout tree R32 → Final with a connected bracket diagram).
 - `fix-tiebreaker-and-bracket` — FIFA World Ranking as the **Step-3 tiebreaker (frozen snapshot)** so tied runners-up and the 8 best third-placed teams stop rendering as "TBD" and the projected bracket repopulates; hardened the group-table layout so a `LIVE`/`TIE` badge can't clip the **Pts** column.
 - `node-24-upgrade` — moved CI and local engines to Node 24 LTS; added `engines.node >=24.0.0`, `.nvmrc`, and bumped `@types/node` to `^24` (Node 20 GitHub Actions runtime is deprecated).
+- `release-automation` — adopted Changesets for automated version bumps, changelog generation, git tags, and GitHub Releases; reconciled `package.json`/`CHANGELOG.md` drift (forward-only to `0.1.3`).
 
 ### Planned (in run order)
-1. **`release-automation`** _(next)_ — adopt Changesets for automated version bumps, changelog, and GitHub Releases; reconcile current `package.json`/`CHANGELOG.md` drift.
-3. **`country-flags`** — SVG flags next to each country, keyed by code (handles the England/Scotland/Wales home nations; emoji flags don't render on Windows).
-4. **`bracket-seeding-labels`** — render a compact seed badge (`1E` / `2A` / `3C` = group-finish position + group letter) next to each **resolved** team in the **R32** column. The engine already emits the underlying labels (`lib/engine/bracket.ts`); only `app/components/Bracket.tsx` rendering changes. R32-only — later rounds are "Winner of M…" and carry no seed.
-5. **`bracket-third-place-card`** — a detached **third-place card** near the **bottom-right** of the bracket diagram, rendering M103. **Introduces the third-place data model** reused by `match-schedule`: add **M103** (third-place playoff, ~July 18) to `KNOCKOUT_SCHEDULE`, a **`ThirdPlace`** variant on `KnockoutRound`, and a **"loser-of"** relationship (M103 = losers of M101/M102). Rendering lands in `app/components/Bracket.tsx`.
-6. **`match-schedule`** — a new `/schedule` section (added to `app/components/Nav.tsx`) reusing existing data: group fixtures from ESPN ingestion (`MatchResult.kickoff`) and knockout dates/venues from `lib/engine/knockoutSchedule.ts` (including the M103 + `ThirdPlace` round added above). No new API source. Shape:
+1. **`country-flags`** _(next)_ — SVG flags next to each country, keyed by code (handles the England/Scotland/Wales home nations; emoji flags don't render on Windows).
+2. **`bracket-seeding-labels`** — render a compact seed badge (`1E` / `2A` / `3C` = group-finish position + group letter) next to each **resolved** team in the **R32** column. The engine already emits the underlying labels (`lib/engine/bracket.ts`); only `app/components/Bracket.tsx` rendering changes. R32-only — later rounds are "Winner of M…" and carry no seed.
+3. **`bracket-third-place-card`** — a detached **third-place card** near the **bottom-right** of the bracket diagram, rendering M103. **Introduces the third-place data model** reused by `match-schedule`: add **M103** (third-place playoff, ~July 18) to `KNOCKOUT_SCHEDULE`, a **`ThirdPlace`** variant on `KnockoutRound`, and a **"loser-of"** relationship (M103 = losers of M101/M102). Rendering lands in `app/components/Bracket.tsx`.
+4. **`match-schedule`** — a new `/schedule` section (added to `app/components/Nav.tsx`) reusing existing data: group fixtures from ESPN ingestion (`MatchResult.kickoff`) and knockout dates/venues from `lib/engine/knockoutSchedule.ts` (including the M103 + `ThirdPlace` round added above). No new API source. Shape:
    - Shows **one phase at a time** — a single matchday or knockout round — never the whole tournament at once.
    - Phase sequence: **Matchday 1, Matchday 2, Matchday 3, Round of 32, Round of 16, Quarter-finals, Semi-finals, Third-place, Final.**
    - **Defaults to the current phase** on load.
    - Phase is addressed by a **`?date=` query param** keyed to the phase's start date (e.g. Matchday 1 → `/schedule?date=2026-06-11`); navigating updates the URL.
    - The displayed phase is split into **sections by calendar day**; each day lists its games (final score inline, or kickoff time if upcoming).
    - A row of **phase buttons** shows a **sliding window of the viewed phase ± 1** (previous, current, next), recomputed around whatever phase is displayed so the user can step all the way forward to the Final. Clamped at the ends (Matchday 1 shows only [MD1, MD2]).
-7. **`stats-section`** — Phase 4: API-Football integration and the full player-stats section.
-8. **`bracket-challenge`** — March-Madness-style knockout bracket challenge: **Supabase** auth + Postgres, per-user picks locked at the first Round-of-32 kickoff, round-weighted scoring (more points for deeper rounds), and a global leaderboard. **Retires the "no database" rule.**
-9. **`live-ranking-bracket`** — bracket and standings react to FIFA's **live** World-Ranking projection as scores change (the live counterpart to the frozen snapshot introduced in `fix-tiebreaker-and-bracket`).
+5. **`stats-section`** — Phase 4: API-Football integration and the full player-stats section.
+6. **`bracket-challenge`** — March-Madness-style knockout bracket challenge: **Supabase** auth + Postgres, per-user picks locked at the first Round-of-32 kickoff, round-weighted scoring (more points for deeper rounds), and a global leaderboard. **Retires the "no database" rule.**
+7. **`live-ranking-bracket`** — bracket and standings react to FIFA's **live** World-Ranking projection as scores change (the live counterpart to the frozen snapshot introduced in `fix-tiebreaker-and-bracket`).
 
 ### Open items to verify at build time
 - API-Football free tier actually serves the **live 2026 season** (not paywalled) — resolve when `stats-section` lands.
