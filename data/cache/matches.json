@@ -319,7 +319,47 @@
         "reds": 0,
         "secondYellows": 0
       }
+    },
+    "760430": {
+      "id": "760430",
+      "homeTeam": "Iraq",
+      "awayTeam": "Norway",
+      "homeScore": 1,
+      "awayScore": 4,
+      "status": "final",
+      "groupId": "I",
+      "kickoff": "2026-06-16T22:00Z",
+      "homeCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760432": {
+      "id": "760432",
+      "homeTeam": "France",
+      "awayTeam": "Senegal",
+      "homeScore": 3,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "I",
+      "kickoff": "2026-06-16T19:00Z",
+      "homeCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      }
     }
   },
-  "backfillWatermark": "20260615"
+  "backfillWatermark": "20260616"
 }
