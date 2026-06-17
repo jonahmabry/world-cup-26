@@ -1,5 +1,6 @@
 import { runPipeline } from '@/lib/pipeline';
 import { GroupTable } from './components/GroupTable';
+import { Flag } from './components/Flag';
 import { initPoller } from '@/lib/poller';
 
 export const dynamic = 'force-dynamic';
@@ -71,7 +72,10 @@ export default async function StandingsPage() {
                   >
                     <td className="py-1.5 px-2">{i + 1}</td>
                     <td className="py-1.5 px-2 font-medium">
-                      {row.team}
+                      <span className="flex items-center gap-1.5 min-w-0">
+                        <Flag name={row.team} />
+                        <span className="truncate">{row.team}</span>
+                      </span>
                     </td>
                     <td className="py-1.5 px-2 text-slate-400">{row.groupId}</td>
                     <td className="py-1.5 px-2 text-center">{row.pts}</td>

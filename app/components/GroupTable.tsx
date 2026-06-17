@@ -1,4 +1,5 @@
 import type { GroupStandings } from '@/lib/types';
+import { Flag } from './Flag';
 
 function rowBg(qualStatus: string): string {
   if (qualStatus === 'auto') return 'bg-green-950 border-l-2 border-green-500';
@@ -48,6 +49,7 @@ export function GroupTable({ standings }: { standings: GroupStandings }) {
               <td className="px-3 py-2 text-slate-400 text-xs">{row.position}</td>
               <td className="px-3 py-2 font-medium text-slate-100">
                 <span className="flex items-center gap-1.5 min-w-0">
+                  <Flag name={row.team} />
                   <span className="truncate">{row.team}</span>
                   {row.provisional && (
                     <span className="shrink-0 text-[10px] text-emerald-400 font-bold tracking-wide">
