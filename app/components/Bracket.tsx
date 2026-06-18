@@ -41,12 +41,14 @@ function TeamSlot({ team, label }: { team: BracketTeam; label: string }) {
   return (
     <div className="flex items-center gap-1 min-w-0">
       <Flag name={team.name} />
-      <span className="text-slate-100 font-medium text-xs truncate">{team.name}</span>
+      {/* Seed badge sits right after the fixed-width flag so badges line up
+          vertically down the column, regardless of name or venue width. */}
       {seed && (
-        <span className="ml-auto shrink-0 text-[9px] font-mono text-slate-400 tracking-tight">
+        <span className="shrink-0 w-4 text-center text-[9px] font-mono text-slate-400">
           {seed}
         </span>
       )}
+      <span className="text-slate-100 font-medium text-xs truncate">{team.name}</span>
     </div>
   );
 }
