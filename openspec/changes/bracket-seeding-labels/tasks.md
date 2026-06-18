@@ -16,7 +16,8 @@
 ## 3. Verification
 
 - [x] 3.1 `npm run lint`, `npm run typecheck`, `npm run test`, `npm run build` all green
-- [ ] 3.2 `npm run dev`: R32 resolved slots show `1x`/`2x`/`3x` matching origin; TBD slots
-  and all R16→Final `Wnn` slots show no badge; no clipping / layout shift beside the flag
+- [x] 3.2 Verified via headless screenshot of `/bracket`: R32 resolved slots show
+  `1x`/`2x`/`3x` matching origin, badges aligned vertically (anchored after the flag);
+  all R16→Final `Wnn` slots show no badge; venue column and names not clipped
 - [x] 3.3 `npx changeset` to record a `patch` release note
 - [x] 3.4 Commit, push `feat/bracket-seeding-labels`, open PR; confirm CI green
