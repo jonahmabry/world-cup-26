@@ -400,6 +400,26 @@
         "secondYellows": 0
       }
     },
+    "760434": {
+      "id": "760434",
+      "homeTeam": "Ghana",
+      "awayTeam": "Panama",
+      "homeScore": 1,
+      "awayScore": 0,
+      "status": "final",
+      "groupId": "L",
+      "kickoff": "2026-06-17T23:00Z",
+      "homeCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 2,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
     "760435": {
       "id": "760435",
       "homeTeam": "Portugal",
@@ -441,5 +461,5 @@
       }
     }
   },
-  "backfillWatermark": "20260616"
+  "backfillWatermark": "20260617"
 }
