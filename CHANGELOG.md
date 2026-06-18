@@ -1,5 +1,15 @@
 # Changelog
 
+## 0.1.5
+
+### Patch Changes
+
+- [#16](https://github.com/jonahmabry/world-cup-26/pull/16) [`fac3e99`](https://github.com/jonahmabry/world-cup-26/commit/fac3e99f40d57ae1171d62a831c8d634a8df8ee2) Thanks [@jonahmabry](https://github.com/jonahmabry)! - Add SVG country flags next to every team name in the group standings tables, the projected knockout bracket, and the third-place ranking table. Flags are bundled static assets keyed by country code (so they render on Windows, unlike emoji flags), with distinct flags for the home nations (England, Scotland).
+
+- [#21](https://github.com/jonahmabry/world-cup-26/pull/21) [`adb09cb`](https://github.com/jonahmabry/world-cup-26/commit/adb09cb6883e18f723ccbc17949461efbb8dfe60) Thanks [@jonahmabry](https://github.com/jonahmabry)! - Fix a backfill date-boundary bug that permanently skipped late-night matches. ESPN buckets matches by US-Eastern date while the watermark advanced by UTC date, so late kickoffs (~00:00–05:00 UTC) were orphaned. The sweep now starts `BACKFILL_LOOKBACK_DAYS` before the watermark so the earlier Eastern date label is re-queried, and the 6 affected finished matches are backfilled. ([#18](https://github.com/jonahmabry/world-cup-26/issues/18))
+
+- [#21](https://github.com/jonahmabry/world-cup-26/pull/21) [`adb09cb`](https://github.com/jonahmabry/world-cup-26/commit/adb09cb6883e18f723ccbc17949461efbb8dfe60) Thanks [@jonahmabry](https://github.com/jonahmabry)! - Correct the third-place Round-of-32 allocation table column mapping. The 8 slot strings were written under the wrong match numbers, placing advancing third-place teams into the wrong R32 matches. The remapped table now matches the official FIFA Annex C source exactly across all 495 group combinations. ([#19](https://github.com/jonahmabry/world-cup-26/issues/19))
+
 ## 0.1.4
 
 ### Patch Changes
