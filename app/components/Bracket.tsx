@@ -13,20 +13,6 @@ const CONN_W = 28;
 // How far above/below card center the connector arm exits the card.
 const CONN_INSET = 13;
 
-// Derive the compact group-seed badge from the engine's verbose slot label.
-// "Winner F" -> "1F", "Runner-up A" -> "2A", "3rd Group C" -> "3C".
-// Anything else ("Winner of M74", "Annex C pending", …) -> null (no seed).
-// Only R32 fixed/third-place slots carry these labels, so the badge is R32-only.
-export function seedFromLabel(label: string): string | null {
-  const winner = /^Winner ([A-L])$/.exec(label);
-  if (winner) return `1${winner[1]}`;
-  const runnerUp = /^Runner-up ([A-L])$/.exec(label);
-  if (runnerUp) return `2${runnerUp[1]}`;
-  const third = /^3rd Group ([A-L])$/.exec(label);
-  if (third) return `3${third[1]}`;
-  return null;
-}
-
 function TeamSlot({ team, label }: { team: BracketTeam; label: string }) {
   if (team.kind === 'tbd-pending-ranking') {
     return <div className="text-yellow-400 text-[11px] italic">TBD</div>;
@@ -37,17 +23,9 @@ function TeamSlot({ team, label }: { team: BracketTeam; label: string }) {
   if (team.kind === 'unknown') {
     return <div className="text-slate-500 text-[11px] italic truncate">{label}</div>;
   }
-  const seed = seedFromLabel(label);
   return (
     <div className="flex items-center gap-1 min-w-0">
       <Flag name={team.name} />
-      {/* Seed badge sits right after the fixed-width flag so badges line up
-          vertically down the column, regardless of name or venue width. */}
-      {seed && (
-        <span className="shrink-0 w-4 text-center text-[9px] font-mono text-slate-400">
-          {seed}
-        </span>
-      )}
       <span className="text-slate-100 font-medium text-xs truncate">{team.name}</span>
     </div>
   );
