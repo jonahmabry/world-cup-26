@@ -1,4 +1,5 @@
 import type { BracketMatchup, BracketTeam, KnockoutRound } from '@/lib/types';
+import { fifaRank, UNRANKED } from '@/lib/engine/fifaRanking';
 import { Flag } from './Flag';
 
 // Pixel constants for the bracket tree layout.
@@ -23,10 +24,19 @@ function TeamSlot({ team, label }: { team: BracketTeam; label: string }) {
   if (team.kind === 'unknown') {
     return <div className="text-slate-500 text-[11px] italic truncate">{label}</div>;
   }
+  const rank = fifaRank(team.name);
   return (
     <div className="flex items-center gap-1 min-w-0">
       <Flag name={team.name} />
-      <span className="text-slate-100 font-medium text-xs truncate">{team.name}</span>
+      <span className="flex-1 text-slate-100 font-medium text-xs truncate">{team.name}</span>
+      {rank !== UNRANKED && (
+        <span
+          className="shrink-0 w-7 text-right text-slate-400 text-[10px] font-mono tabular-nums"
+          title="FIFA World Ranking"
+        >
+          #{rank}
+        </span>
+      )}
     </div>
   );
 }
