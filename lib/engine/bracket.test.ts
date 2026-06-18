@@ -81,33 +81,35 @@ describe('computeBracket', () => {
 
   describe('third-place slots (ABCDEFGH advancing → known allocation)', () => {
     // With ABCDEFGH advancing, getAllocation returns:
-    // M74:'H', M77:'G', M79:'B', M80:'C', M81:'A', M82:'F', M85:'D', M87:'E'
+    // M74:'C', M77:'F', M79:'H', M80:'E', M81:'B', M82:'A', M85:'G', M87:'D'
+    // Each assigned group lies within its match's official allowed set, e.g.
+    // M74 (Winner E) draws from {A,B,C,D,F}, so group H can never land here.
 
-    it('M79: Winner A vs 3rd Group B', () => {
+    it('M79: Winner A vs 3rd Group H', () => {
       const m = bracket.find((b) => b.matchId === 'M79')!;
       expect(m.home).toEqual({ kind: 'team', name: 'WA' });
-      expect(m.away).toEqual({ kind: 'team', name: '3B' });
+      expect(m.away).toEqual({ kind: 'team', name: '3H' });
       expect(m.homeLabel).toBe('Winner A');
+      expect(m.awayLabel).toBe('3rd Group H');
+    });
+
+    it('M81: Winner D vs 3rd Group B', () => {
+      const m = bracket.find((b) => b.matchId === 'M81')!;
+      expect(m.home).toEqual({ kind: 'team', name: 'WD' });
+      expect(m.away).toEqual({ kind: 'team', name: '3B' });
       expect(m.awayLabel).toBe('3rd Group B');
     });
 
-    it('M81: Winner D vs 3rd Group A', () => {
-      const m = bracket.find((b) => b.matchId === 'M81')!;
-      expect(m.home).toEqual({ kind: 'team', name: 'WD' });
-      expect(m.away).toEqual({ kind: 'team', name: '3A' });
-      expect(m.awayLabel).toBe('3rd Group A');
-    });
-
-    it('M74: Winner E vs 3rd Group H', () => {
+    it('M74: Winner E vs 3rd Group C', () => {
       const m = bracket.find((b) => b.matchId === 'M74')!;
       expect(m.home).toEqual({ kind: 'team', name: 'WE' });
-      expect(m.away).toEqual({ kind: 'team', name: '3H' });
+      expect(m.away).toEqual({ kind: 'team', name: '3C' });
     });
 
-    it('M85: Winner B vs 3rd Group D', () => {
+    it('M85: Winner B vs 3rd Group G', () => {
       const m = bracket.find((b) => b.matchId === 'M85')!;
       expect(m.home).toEqual({ kind: 'team', name: 'WB' });
-      expect(m.away).toEqual({ kind: 'team', name: '3D' });
+      expect(m.away).toEqual({ kind: 'team', name: '3G' });
     });
   });
 
