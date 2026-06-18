@@ -9,6 +9,29 @@ import { computeBracket } from './engine/bracket';
 
 const TOURNAMENT_START = '20260611';
 
+// ESPN's scoreboard buckets matches by US-Eastern calendar date, but the on-disk
+// watermark advances by UTC date (see lib/cache/disk.ts updateBackfillWatermark).
+// For late kickoffs (~00:00–05:00 UTC = the previous evening in the Americas) the
+// two calendars disagree by a day: ESPN files such a match under the earlier
+// Eastern date, while the watermark counts it under the later UTC date. A strict
+// watermark+1 sweep start therefore advances the UTC watermark past the day while a
+// late match that ESPN only serves under the earlier Eastern label is still pending,
+// then never re-queries that label — permanently orphaning the match.
+//
+// Starting the sweep a couple of days before the watermark re-queries that earlier
+// Eastern date label so the match is eventually picked up. The write-once disk guard
+// (writeMatchToDisk) makes the overlap a no-op for already-cached matches.
+const BACKFILL_LOOKBACK_DAYS = 2;
+
+// First sweep date for a given watermark. Exported for testing the date-boundary fix.
+export function computeSweepStart(watermark: string | null): string {
+  if (!watermark) return TOURNAMENT_START;
+  const d = new Date(`${watermark.slice(0, 4)}-${watermark.slice(4, 6)}-${watermark.slice(6, 8)}T00:00:00Z`);
+  d.setUTCDate(d.getUTCDate() + 1 - BACKFILL_LOOKBACK_DAYS);
+  const candidate = formatDate(d);
+  return candidate < TOURNAMENT_START ? TOURNAMENT_START : candidate;
+}
+
 // Sweeps past tournament dates not yet in the on-disk cache.
 // Returns true if the ESPN call failed (caller should set hasStaleData).
 async function runBackfill(): Promise<boolean> {
@@ -18,14 +41,7 @@ async function runBackfill(): Promise<boolean> {
   yesterday.setUTCDate(yesterday.getUTCDate() - 1);
   const yesterdayStr = formatDate(yesterday);
 
-  let sweepStart: string;
-  if (watermark) {
-    const d = new Date(`${watermark.slice(0, 4)}-${watermark.slice(4, 6)}-${watermark.slice(6, 8)}T00:00:00Z`);
-    d.setUTCDate(d.getUTCDate() + 1);
-    sweepStart = formatDate(d);
-  } else {
-    sweepStart = TOURNAMENT_START;
-  }
+  const sweepStart = computeSweepStart(watermark);
 
   if (sweepStart > yesterdayStr) return false;
 
