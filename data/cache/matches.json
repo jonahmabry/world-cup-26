@@ -1,44 +1,4 @@
 {
-  "760421": {
-    "id": "760421",
-    "homeTeam": "Australia",
-    "awayTeam": "Türkiye",
-    "homeScore": 2,
-    "awayScore": 0,
-    "status": "final",
-    "groupId": "D",
-    "kickoff": "2026-06-14T04:00Z",
-    "homeCards": {
-      "yellows": 0,
-      "reds": 0,
-      "secondYellows": 0
-    },
-    "awayCards": {
-      "yellows": 1,
-      "reds": 0,
-      "secondYellows": 0
-    }
-  },
-  "760422": {
-    "id": "760422",
-    "homeTeam": "Germany",
-    "awayTeam": "Curaçao",
-    "homeScore": 7,
-    "awayScore": 1,
-    "status": "final",
-    "groupId": "E",
-    "kickoff": "2026-06-14T17:00Z",
-    "homeCards": {
-      "yellows": 0,
-      "reds": 0,
-      "secondYellows": 0
-    },
-    "awayCards": {
-      "yellows": 0,
-      "reds": 0,
-      "secondYellows": 0
-    }
-  },
   "matches": {
     "760414": {
       "id": "760414",
@@ -240,6 +200,26 @@
         "secondYellows": 0
       }
     },
+    "760424": {
+      "id": "760424",
+      "homeTeam": "Sweden",
+      "awayTeam": "Tunisia",
+      "homeScore": 5,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "F",
+      "kickoff": "2026-06-15T02:00Z",
+      "homeCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
     "760425": {
       "id": "760425",
       "homeTeam": "Netherlands",
@@ -276,6 +256,26 @@
       },
       "awayCards": {
         "yellows": 2,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760427": {
+      "id": "760427",
+      "homeTeam": "Iran",
+      "awayTeam": "New Zealand",
+      "homeScore": 2,
+      "awayScore": 2,
+      "status": "final",
+      "groupId": "G",
+      "kickoff": "2026-06-16T01:00Z",
+      "homeCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 0,
         "reds": 0,
         "secondYellows": 0
       }
@@ -340,6 +340,26 @@
         "secondYellows": 0
       }
     },
+    "760431": {
+      "id": "760431",
+      "homeTeam": "Austria",
+      "awayTeam": "Jordan",
+      "homeScore": 3,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "J",
+      "kickoff": "2026-06-17T04:00Z",
+      "homeCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
     "760432": {
       "id": "760432",
       "homeTeam": "France",
@@ -349,6 +369,66 @@
       "status": "final",
       "groupId": "I",
       "kickoff": "2026-06-16T19:00Z",
+      "homeCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760433": {
+      "id": "760433",
+      "homeTeam": "Argentina",
+      "awayTeam": "Algeria",
+      "homeScore": 3,
+      "awayScore": 0,
+      "status": "final",
+      "groupId": "J",
+      "kickoff": "2026-06-17T01:00Z",
+      "homeCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760435": {
+      "id": "760435",
+      "homeTeam": "Portugal",
+      "awayTeam": "Congo DR",
+      "homeScore": 1,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "K",
+      "kickoff": "2026-06-17T17:00Z",
+      "homeCards": {
+        "yellows": 3,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760437": {
+      "id": "760437",
+      "homeTeam": "England",
+      "awayTeam": "Croatia",
+      "homeScore": 4,
+      "awayScore": 2,
+      "status": "final",
+      "groupId": "L",
+      "kickoff": "2026-06-17T20:00Z",
       "homeCards": {
         "yellows": 0,
         "reds": 0,
