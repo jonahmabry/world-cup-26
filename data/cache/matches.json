@@ -440,6 +440,26 @@
         "secondYellows": 0
       }
     },
+    "760436": {
+      "id": "760436",
+      "homeTeam": "Uzbekistan",
+      "awayTeam": "Colombia",
+      "homeScore": 1,
+      "awayScore": 3,
+      "status": "final",
+      "groupId": "K",
+      "kickoff": "2026-06-18T02:00Z",
+      "homeCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
     "760437": {
       "id": "760437",
       "homeTeam": "England",
@@ -459,7 +479,87 @@
         "reds": 0,
         "secondYellows": 0
       }
+    },
+    "760438": {
+      "id": "760438",
+      "homeTeam": "Czechia",
+      "awayTeam": "South Africa",
+      "homeScore": 1,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "A",
+      "kickoff": "2026-06-18T16:00Z",
+      "homeCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 2,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760439": {
+      "id": "760439",
+      "homeTeam": "Switzerland",
+      "awayTeam": "Bosnia and Herzegovina",
+      "homeScore": 4,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "B",
+      "kickoff": "2026-06-18T19:00Z",
+      "homeCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 2,
+        "reds": 1,
+        "secondYellows": 0
+      }
+    },
+    "760440": {
+      "id": "760440",
+      "homeTeam": "Canada",
+      "awayTeam": "Qatar",
+      "homeScore": 6,
+      "awayScore": 0,
+      "status": "final",
+      "groupId": "B",
+      "kickoff": "2026-06-18T22:00Z",
+      "homeCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 1,
+        "reds": 2,
+        "secondYellows": 0
+      }
+    },
+    "760441": {
+      "id": "760441",
+      "homeTeam": "Mexico",
+      "awayTeam": "South Korea",
+      "homeScore": 1,
+      "awayScore": 0,
+      "status": "final",
+      "groupId": "A",
+      "kickoff": "2026-06-19T01:00Z",
+      "homeCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 2,
+        "reds": 0,
+        "secondYellows": 0
+      }
     }
   },
-  "backfillWatermark": "20260617"
+  "backfillWatermark": "20260618"
 }

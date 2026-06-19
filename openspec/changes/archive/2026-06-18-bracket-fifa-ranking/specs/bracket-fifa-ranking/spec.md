@@ -3,22 +3,23 @@
 ### Requirement: Resolved bracket teams render their FIFA World Ranking
 
 The projected knockout bracket SHALL display each resolved team's frozen FIFA World Ranking
-position (from the `lib/engine/fifaRanking.ts` snapshot) to the right of the team name. The
-ranking SHALL be right-aligned in a fixed-width gutter so that the rankings form a clean
-vertical column across rows, independent of team-name length. The ranking SHALL be shown as
-`#<position>` (e.g. `#1`, `#11`).
+position (from the `lib/engine/fifaRanking.ts` snapshot) between the team's flag and its name.
+The ranking SHALL occupy a fixed-width gutter so that the team names line up at a consistent
+horizontal start position across rows, independent of how many digits the ranking has. The
+ranking SHALL be shown as the bare position number (e.g. `1`, `11`).
 
 #### Scenario: Resolved team shows its ranking
 
 - **WHEN** a knockout bracket match slot is filled by a resolved team (`kind === 'team'`)
-- **THEN** that team's FIFA World Ranking SHALL render as `#<position>` to the right of its name
+- **THEN** that team's FIFA World Ranking SHALL render as the bare position number, positioned
+  between the team's flag and its name
 
-#### Scenario: Rankings align across rows of differing name length
+#### Scenario: Team names align across rows of differing ranking width
 
-- **WHEN** two resolved teams with different name lengths (e.g. "Iran" and
-  "Bosnia and Herzegovina") render in the bracket
-- **THEN** their ranking numbers SHALL appear at the same horizontal position (right-aligned in
-  a fixed gutter), not trailing immediately after each variable-length name
+- **WHEN** resolved teams with one-digit and two-digit rankings (e.g. `5` and `24`) render in
+  the bracket
+- **THEN** the ranking SHALL sit in a fixed-width gutter so that the team names start at the
+  same horizontal position regardless of ranking width
 
 ### Requirement: Unresolved slots and unranked teams show no ranking
 

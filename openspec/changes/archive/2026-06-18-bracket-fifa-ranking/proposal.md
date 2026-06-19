@@ -18,10 +18,10 @@ reacts to results is the separate later `live-ranking-bracket` change and is out
 
 - **Render the FIFA World Ranking in the bracket.** In `app/components/Bracket.tsx`, the
   resolved-team slot (`team.kind === 'team'`) gains the team's ranking number, displayed as
-  `#<rank>` (e.g. `#1`, `#11`) to the right of the name.
-- **Fixed-gutter alignment.** The name fills a flexible, truncating column and the ranking sits
-  in a fixed-width, right-aligned gutter, so every row's ranking aligns vertically regardless of
-  name length.
+  the bare position (e.g. `1`, `11`) between the team's flag and its name.
+- **Fixed-gutter alignment.** The ranking sits in a fixed-width gutter between the flag and the
+  name, so the team names start at a consistent horizontal position regardless of how many
+  digits the ranking has.
 - **Placeholders carry no ranking.** Unresolved slots (`tbd-pending-ranking`, `winner-of`,
   `unknown`) are untouched — they have no resolved country, so no number is shown.
 - **Reuse the existing snapshot.** The number comes from the existing `fifaRank(team)` lookup
@@ -33,8 +33,8 @@ reacts to results is the separate later `live-ranking-bracket` change and is out
 ### New Capabilities
 
 - `bracket-fifa-ranking`: every resolved team in the projected knockout bracket renders its
-  frozen FIFA World Ranking position, right-aligned in a fixed gutter so rankings form a clean
-  column across rows.
+  frozen FIFA World Ranking position in a fixed-width gutter between the flag and the name, so
+  the team names line up across rows.
 
 ### Modified Capabilities
 
