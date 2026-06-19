@@ -75,13 +75,16 @@ single-root invariant (M104 is the root, nothing may reference M104) still holds
 assertion mirroring the M104 check: M103 exists and no other match lists M103 in `feedsFrom` (it is a
 leaf, never a feed). The `feedsFrom` reference check already covers M103 → M101/M102 validity.
 
-### 4. Detached card: absolutely positioned in the bracket viewport, bottom-right
+### 4. Detached card: absolutely positioned in the bracket viewport, lower-right
 
 Give the existing bracket-columns flex container `position: relative` and mount one absolutely
-positioned `MatchCard` for M103 pinned to the bottom-right of that container (within the
-`overflow-x-auto` viewport, so it scrolls with the tree rather than floating over page chrome), under a
-small "Third-place play-off" caption. No connector arms are drawn. The card is selected out of
-`matchups` by `round === 'ThirdPlace'` and rendered outside the `ROUND_DEFS.map`.
+positioned `MatchCard` for M103 in the lower-right of that container (within the `overflow-x-auto`
+viewport, so it scrolls with the tree rather than floating over page chrome), with a small
+"Third-place match" caption below it. The card is aligned horizontally with the **Final** column
+(`left = 4 * (COL_W + CONN_W)`) and vertically with **M100** (the last QF card, Kansas City —
+`top = 14 * SLOT_H - CARD_H / 2`), so it sits in the empty space below the centered Final card. No
+connector arms are drawn. The card is selected out of `matchups` by `round === 'ThirdPlace'` and
+rendered outside the `ROUND_DEFS.map`.
 
 `TeamSlot` gains a `loser-of` branch rendering `L{matchId.slice(1)}` (e.g. `L101`), styled like the
 existing `winner-of` branch.
@@ -102,8 +105,8 @@ belongs.
 - **`hasUnknown` warning scans only R32 slots** → M103's `loser-of` slots are not `unknown`, so the
   warning banner is unaffected. No change needed.
 - **Detached card overlap at narrow widths** → It is mounted inside the same horizontally scrollable
-  viewport and anchored to the columns container, so it tracks the tree; bottom-right placement keeps it
-  clear of the centered Final card and its connectors.
+  viewport and anchored to the columns container, so it tracks the tree; the Final-column / M100-row
+  placement sits in empty space below the centered Final card, clear of its connectors.
 
 ## Migration Plan
 
@@ -114,6 +117,5 @@ refresh) and no other capability depends on M103 until `match-schedule`.
 
 ## Open Questions
 
-- **M103 venue / date / kickoff:** intended values are Miami, ~JUL 18 (the day before the Final at New
-  York/New Jersey on JUL 19). Confirm the exact host city and CDT kickoff against the official FIFA 2026
-  schedule before committing the `KNOCKOUT_SCHEDULE` entry.
+- **M103 venue / date / kickoff:** _Resolved._ Miami, JUL 18, 4:00PM CDT (5:00PM ET, the day before the
+  Final at New York/New Jersey on JUL 19), confirmed against the official FIFA 2026 schedule.

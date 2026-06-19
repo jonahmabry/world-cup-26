@@ -27,8 +27,9 @@
 - [x] 4.1 Add a `loser-of` branch to `TeamSlot` in `app/components/Bracket.tsx` rendering
   `L{matchId.slice(1)}` (e.g. `L101`), styled like the existing `winner-of` branch
 - [x] 4.2 Give the bracket-columns container `position: relative` and render a single absolutely
-  positioned `MatchCard` for the `ThirdPlace` matchup pinned to the bottom-right, inside the
-  `overflow-x-auto` viewport, under a small "Third-place play-off" caption, with no connector arms
+  positioned `MatchCard` for the `ThirdPlace` matchup in the lower-right (x-aligned with the Final
+  column, y-aligned with M100), inside the `overflow-x-auto` viewport, with a small "Third-place match"
+  caption below it and no connector arms
 - [x] 4.3 Select M103 out of `matchups` by `round === 'ThirdPlace'` (outside `ROUND_DEFS.map`); confirm
   `ThirdPlace` is not added to `ROUND_DEFS` so it never renders as a tree column
 

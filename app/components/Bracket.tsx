@@ -80,6 +80,13 @@ const ROUND_DEFS: RoundDef[] = [
 const TOTAL_R32 = 16;
 const BRACKET_H = TOTAL_R32 * SLOT_H;
 
+// Detached third-place card placement: horizontally aligned with the Final
+// column (index 4) and vertically aligned with M100 (the 4th/last QF card,
+// Kansas City). M100's column-relative top mirrors the per-card math below:
+// centerSlot = index(3) * slotsPerCard(4) + slotsPerCard/2 = 14.
+const THIRD_PLACE_LEFT = 4 * (COL_W + CONN_W);
+const THIRD_PLACE_TOP = 14 * SLOT_H - CARD_H / 2;
+
 export function Bracket({ matchups }: { matchups: BracketMatchup[] }) {
   const byRound = (round: KnockoutRound) =>
     matchups.filter((m) => m.round === round).sort((a, b) => a.slot - b.slot);
@@ -119,7 +126,7 @@ export function Bracket({ matchups }: { matchups: BracketMatchup[] }) {
             return (
               <div
                 key={round}
-                className="relative flex-shrink-0"
+                className="relative shrink-0"
                 style={{ width: COL_W, height: BRACKET_H }}
               >
                 {cards.map((m, i) => {
@@ -168,13 +175,14 @@ export function Bracket({ matchups }: { matchups: BracketMatchup[] }) {
             );
           })}
 
-          {/* Detached third-place play-off card (M103), bottom-right, no connectors */}
+          {/* Detached third-place match card (M103): x-aligned with the Final
+              column, y-aligned with M100 (Kansas City QF). No connectors. */}
           {thirdPlace && (
-            <div className="absolute" style={{ right: 0, bottom: 0, width: COL_W }}>
-              <div className="text-center text-[10px] text-slate-500 uppercase tracking-wider font-medium mb-2">
-                Third-place play-off
-              </div>
+            <div className="absolute" style={{ left: THIRD_PLACE_LEFT, top: THIRD_PLACE_TOP, width: COL_W }}>
               <MatchCard matchup={thirdPlace} />
+              <div className="text-center text-[10px] text-slate-500 uppercase tracking-wider font-medium mt-2">
+                Third-place match
+              </div>
             </div>
           )}
         </div>

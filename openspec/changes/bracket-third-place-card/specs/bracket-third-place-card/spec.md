@@ -49,15 +49,18 @@ play-off (M103) SHALL use loser-of references for both of its slots: the losers 
 
 ### Requirement: Render the third-place play-off as a detached card
 
-The bracket UI SHALL render M103 as a single detached match card positioned near the bottom-right of
-the bracket diagram, outside the per-round column tree. The card SHALL reuse the standard match-card
-and team-slot presentation and SHALL NOT draw tree connectors to the Semi-finals or the Final.
+The bracket UI SHALL render M103 as a single detached match card in the lower-right of the bracket
+diagram, outside the per-round column tree — horizontally aligned with the Final column and vertically
+aligned with the last Quarter-final card (M100), in the empty space below the centered Final card. The
+card SHALL reuse the standard match-card and team-slot presentation and SHALL NOT draw tree connectors
+to the Semi-finals or the Final.
 
 #### Scenario: Detached card is shown
 
 - **WHEN** the bracket page is rendered
-- **THEN** a third-place card for M103 SHALL appear near the bottom-right of the diagram, visually
-  separate from the R32 → Final column tree and without connector lines
+- **THEN** a third-place card for M103 SHALL appear in the lower-right of the diagram — aligned with the
+  Final column and the M100 row — visually separate from the R32 → Final column tree and without
+  connector lines
 
 #### Scenario: Card reuses standard slot presentation
 
