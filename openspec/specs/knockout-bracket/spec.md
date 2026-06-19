@@ -5,11 +5,11 @@ The knockout bracket capability computes and renders a deterministic projected k
 ## Requirements
 
 ### Requirement: Compute a deterministic snapshot bracket
-The system SHALL compute a projected knockout bracket representing the draw "if the group stage ended at this moment." The bracket SHALL cover the full knockout tree — Round of 32 (M73–M88), Round of 16 (M89–M96), Quarter-finals (M97–M100), Semi-finals (M101–M102), and the Final (M104); the third-place play-off (M103) is excluded. The Round of 32 SHALL be recomputed on every refresh from the current standings snapshot; later rounds are fixed structural slots referencing the winners of prior matches.
+The system SHALL compute a projected knockout bracket representing the draw "if the group stage ended at this moment." The bracket SHALL cover the full knockout tree — Round of 32 (M73–M88), Round of 16 (M89–M96), Quarter-finals (M97–M100), Semi-finals (M101–M102), the Final (M104), and the third-place play-off (M103). The Round of 32 SHALL be recomputed on every refresh from the current standings snapshot; later rounds are fixed structural slots referencing prior matches — the winners of their feeding matches, except the third-place play-off (M103), whose slots reference the losers of the two Semi-finals.
 
 #### Scenario: Bracket computed from current standings
 - **WHEN** a refresh is triggered
-- **THEN** the bracket module SHALL read the current standings (top-2 per group + 8 best thirds) and produce the Round-of-32 matchups, plus the R16, QF, SF, and Final matchups that build on them
+- **THEN** the bracket module SHALL read the current standings (top-2 per group + 8 best thirds) and produce the Round-of-32 matchups, plus the R16, QF, SF, Final, and third-place (M103) matchups that build on them
 
 #### Scenario: Snapshot label
 - **WHEN** the bracket is rendered
@@ -17,7 +17,7 @@ The system SHALL compute a projected knockout bracket representing the draw "if 
 
 #### Scenario: Later rounds do not change with group results
 - **WHEN** group standings change between refreshes
-- **THEN** the R32 team slots SHALL update, while R16-and-later slots SHALL remain winner-of references (they depend on knockout results, not standings)
+- **THEN** the R32 team slots SHALL update, while R16-and-later slots SHALL remain winner-of references — and the third-place play-off (M103) SHALL remain loser-of references — because they depend on knockout results, not standings
 
 ### Requirement: Project later rounds as winner-of references
 Each Round-of-16, Quarter-final, Semi-final, and Final slot SHALL be expressed as a reference to the winner of a specific earlier match, identified by that match's number, rather than a team name. The feed structure (which two matches feed each later match) SHALL come from the official FIFA 2026 knockout schedule.
