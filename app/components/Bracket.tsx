@@ -21,6 +21,9 @@ function TeamSlot({ team, label }: { team: BracketTeam; label: string }) {
   if (team.kind === 'winner-of') {
     return <div className="text-slate-400 text-[11px] font-mono">W{team.matchId.slice(1)}</div>;
   }
+  if (team.kind === 'loser-of') {
+    return <div className="text-slate-400 text-[11px] font-mono">L{team.matchId.slice(1)}</div>;
+  }
   if (team.kind === 'unknown') {
     return <div className="text-slate-500 text-[11px] italic truncate">{label}</div>;
   }
@@ -85,6 +88,8 @@ export function Bracket({ matchups }: { matchups: BracketMatchup[] }) {
     (m) => m.round === 'R32' && (m.home.kind === 'unknown' || m.away.kind === 'unknown'),
   );
 
+  const thirdPlace = matchups.find((m) => m.round === 'ThirdPlace');
+
   return (
     <div>
       <p className="text-slate-400 text-sm mb-4 italic">
@@ -106,7 +111,7 @@ export function Bracket({ matchups }: { matchups: BracketMatchup[] }) {
         </div>
 
         {/* Bracket columns */}
-        <div className="flex" style={{ height: BRACKET_H, gap: CONN_W }}>
+        <div className="flex relative" style={{ height: BRACKET_H, gap: CONN_W }}>
           {ROUND_DEFS.map(({ round, slotsPerCard }, colIdx) => {
             const cards = byRound(round);
             const isLast = colIdx === ROUND_DEFS.length - 1;
@@ -162,6 +167,16 @@ export function Bracket({ matchups }: { matchups: BracketMatchup[] }) {
               </div>
             );
           })}
+
+          {/* Detached third-place play-off card (M103), bottom-right, no connectors */}
+          {thirdPlace && (
+            <div className="absolute" style={{ right: 0, bottom: 0, width: COL_W }}>
+              <div className="text-center text-[10px] text-slate-500 uppercase tracking-wider font-medium mb-2">
+                Third-place play-off
+              </div>
+              <MatchCard matchup={thirdPlace} />
+            </div>
+          )}
         </div>
       </div>
 
