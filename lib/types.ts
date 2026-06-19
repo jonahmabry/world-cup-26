@@ -51,6 +51,25 @@ export interface GroupStandings {
   rows: StandingRow[];
 }
 
+export type PhaseKey = 'MD1' | 'MD2' | 'MD3' | 'R32' | 'R16' | 'QF' | 'SF' | 'ThirdPlace' | 'Final';
+
+export interface Phase {
+  key: PhaseKey;
+  label: string;
+  startDate: string; // YYYY-MM-DD
+  endDate: string;   // YYYY-MM-DD
+}
+
+export interface GroupFixture {
+  groupId: GroupId;
+  matchday: 1 | 2 | 3;
+  home: string;       // canonical team name
+  away: string;       // canonical team name
+  isoDate: string;    // YYYY-MM-DD
+  kickoffTime: string; // CDT display string, e.g. "3:30PM"
+  venueCity: string;
+}
+
 export type KnockoutRound = 'R32' | 'R16' | 'QF' | 'SF' | 'ThirdPlace' | 'Final';
 
 export type BracketTeam =
@@ -78,6 +97,7 @@ export interface Snapshot {
   allThirds: StandingRow[];
   advancingThirds: StandingRow[];
   bracket: BracketMatchup[];
+  matches: MatchResult[];
   lastUpdated: string;
   hasStaleData: boolean;
 }

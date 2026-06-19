@@ -6,7 +6,8 @@ import { usePathname } from 'next/navigation';
 const TABS = [
   { href: '/', label: 'Standings', key: 'standings' },
   { href: '/bracket', label: 'Bracket', key: 'bracket' },
-  { href: '#', label: 'Stats (Phase 2)', key: 'stats', disabled: true },
+  { href: '/schedule', label: 'Schedule', key: 'schedule' },
+  { href: '#', label: 'Stats (Coming Soon)', key: 'stats', disabled: true },
 ];
 
 export function Nav() {
