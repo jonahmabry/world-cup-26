@@ -90,8 +90,9 @@ export function computeBracket(
   });
 
   // Build R16, QF, SF, Final matchups as winner-of slots from the schedule tree.
+  // The third-place play-off (M103) is excluded here — it is fed by losers, not winners.
   const laterRounds: BracketMatchup[] = Object.entries(KNOCKOUT_SCHEDULE)
-    .filter(([, entry]) => entry.feedsFrom !== null)
+    .filter(([, entry]) => entry.feedsFrom !== null && entry.round !== 'ThirdPlace')
     .sort(([a], [b]) => mNum(a) - mNum(b))
     .map(([matchId, entry]) => {
       const [feedA, feedB] = entry.feedsFrom!;
@@ -109,5 +110,21 @@ export function computeBracket(
       };
     });
 
-  return [...r32, ...laterRounds];
+  // Third-place play-off (M103): both slots are the LOSERS of the two Semi-finals.
+  const tpEntry = KNOCKOUT_SCHEDULE['M103']!;
+  const [tpFeedA, tpFeedB] = tpEntry.feedsFrom!;
+  const thirdPlace: BracketMatchup = {
+    matchId: 'M103',
+    home: { kind: 'loser-of', matchId: tpFeedA },
+    away: { kind: 'loser-of', matchId: tpFeedB },
+    homeLabel: `Loser of ${tpFeedA}`,
+    awayLabel: `Loser of ${tpFeedB}`,
+    round: tpEntry.round,
+    slot: tpEntry.slot,
+    venueCity: tpEntry.venueCity,
+    date: tpEntry.date,
+    kickoffTime: tpEntry.kickoffTime,
+  };
+
+  return [...r32, ...laterRounds, thirdPlace];
 }

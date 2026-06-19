@@ -51,12 +51,13 @@ export interface GroupStandings {
   rows: StandingRow[];
 }
 
-export type KnockoutRound = 'R32' | 'R16' | 'QF' | 'SF' | 'Final';
+export type KnockoutRound = 'R32' | 'R16' | 'QF' | 'SF' | 'ThirdPlace' | 'Final';
 
 export type BracketTeam =
   | { kind: 'team'; name: string }
   | { kind: 'tbd-pending-ranking' }
   | { kind: 'winner-of'; matchId: string }
+  | { kind: 'loser-of'; matchId: string }
   | { kind: 'unknown' };
 
 export interface BracketMatchup {

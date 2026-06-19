@@ -56,6 +56,10 @@ export const KNOCKOUT_SCHEDULE: Record<string, KnockoutMatchEntry> = {
   M101: { round: 'SF', slot: 1, feedsFrom: ['M97',  'M98'],  venueCity: 'Dallas',  date: 'JUL 14', kickoffTime: '2:00PM' },   // CDT
   M102: { round: 'SF', slot: 2, feedsFrom: ['M99',  'M100'], venueCity: 'Atlanta', date: 'JUL 15', kickoffTime: '2:00PM' },   // EDT→CDT
 
+  // ── Third-place play-off (July 18) ───────────────────────────────────────────
+  // Contested by the LOSERS of the two Semi-finals (M101, M102), not the winners.
+  M103: { round: 'ThirdPlace', slot: 1, feedsFrom: ['M101', 'M102'], venueCity: 'Miami', date: 'JUL 18', kickoffTime: '4:00PM' },  // EDT→CDT
+
   // ── Final (July 19) ──────────────────────────────────────────────────────────
   M104: { round: 'Final', slot: 1, feedsFrom: ['M101', 'M102'], venueCity: 'New York/New Jersey', date: 'JUL 19', kickoffTime: '2:00PM' },  // EDT→CDT
 };
@@ -76,9 +80,17 @@ function validateSchedule(): void {
     throw new Error('knockoutSchedule: Final (M104) is missing');
   }
 
+  if (!ids.has('M103')) {
+    throw new Error('knockoutSchedule: third-place play-off (M103) is missing');
+  }
+
+  // M103 (third place) and M104 (Final) are tree leaves — nothing feeds from them.
   for (const entry of Object.values(KNOCKOUT_SCHEDULE)) {
     if (entry.feedsFrom?.includes('M104')) {
       throw new Error('knockoutSchedule: M104 cannot be referenced by another match');
+    }
+    if (entry.feedsFrom?.includes('M103')) {
+      throw new Error('knockoutSchedule: M103 cannot be referenced by another match');
     }
   }
 }
