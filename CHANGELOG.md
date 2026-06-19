@@ -1,5 +1,13 @@
 # Changelog
 
+## 0.1.6
+
+### Patch Changes
+
+- [#22](https://github.com/jonahmabry/world-cup-26/pull/22) [`40953f2`](https://github.com/jonahmabry/world-cup-26/commit/40953f2c3cbbf568204391fe939c222a698c31ac) Thanks [@jonahmabry](https://github.com/jonahmabry)! - Show each resolved team's frozen FIFA World Ranking in the projected bracket, in a fixed-width gutter between the flag and the team name so the names line up across rows. Placeholder slots (TBD / Winner-of) and unranked names render no number.
+
+- [#24](https://github.com/jonahmabry/world-cup-26/pull/24) [`6159165`](https://github.com/jonahmabry/world-cup-26/commit/6159165edf7cdc9b3c724f1e3b61f5bbd9516fb5) Thanks [@jonahmabry](https://github.com/jonahmabry)! - Add the third-place play-off (M103) to the projected bracket. Introduces the `ThirdPlace` round and a `loser-of` slot reference (the losers of the two Semi-finals), and renders M103 as a detached card in the lower-right of the bracket — aligned with the Final column and the M100 row — with no tree connectors.
+
 ## 0.1.5
 
 ### Patch Changes
