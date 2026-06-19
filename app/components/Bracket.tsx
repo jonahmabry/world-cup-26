@@ -1,4 +1,5 @@
 import type { BracketMatchup, BracketTeam, KnockoutRound } from '@/lib/types';
+import { fifaRank, UNRANKED } from '@/lib/engine/fifaRanking';
 import { Flag } from './Flag';
 
 // Pixel constants for the bracket tree layout.
@@ -23,30 +24,38 @@ function TeamSlot({ team, label }: { team: BracketTeam; label: string }) {
   if (team.kind === 'unknown') {
     return <div className="text-slate-500 text-[11px] italic truncate">{label}</div>;
   }
+  const rank = fifaRank(team.name);
   return (
-    <div className="flex items-center gap-1 min-w-0">
-      <Flag name={team.name} />
-      <span className="text-slate-100 font-medium text-xs truncate">{team.name}</span>
-    </div>
+      <div className="flex items-baseline gap-1 min-w-0">
+        <Flag name={team.name} className="self-center"/>
+        <span
+            className="relative top-[-0.5px] w-2.5 shrink-0 text-center text-yellow-500 text-[10px] font-mono tabular-nums"
+            title="FIFA World Ranking"
+        >
+          {rank !== UNRANKED ? rank : ''}
+        </span>
+        <span className="text-slate-100 font-medium text-xs truncate">{team.name}</span>
+      </div>
   );
 }
 
 function MatchCard({ matchup }: { matchup: BracketMatchup }) {
   return (
-    <div className="bg-slate-800 rounded border border-slate-700 px-2 py-1.5 flex gap-1" style={{ height: CARD_H }}>
-      {/* Left: match ID + team slots */}
-      <div className="flex-1 flex flex-col justify-between min-w-0">
-        <span className="text-[9px] text-slate-500 font-mono uppercase">{matchup.matchId}</span>
-        <div className="space-y-0.5">
+    <div className="bg-slate-800 rounded border border-slate-700 px-2 py-1.5 flex flex-col gap-1" style={{ height: CARD_H }}>
+      {/* Top row: match ID (left) + city (right) */}
+      <div className="flex flex-row justify-between items-center min-w-0 text-[9px] text-slate-500">
+        <span className="font-mono uppercase shrink-0">{matchup.matchId}</span>
+        <span className="truncate text-right">{matchup.venueCity}</span>
+      </div>
+
+      {/* Bottom row: team column (with FIFA rankings) + date/time column */}
+      <div className="flex flex-row gap-1 flex-1 min-w-0">
+        <div className="flex-1 flex flex-col justify-center space-y-0.5 min-w-0">
           <TeamSlot team={matchup.home} label={matchup.homeLabel} />
-          <div className="text-slate-700 text-[9px] text-center leading-none">vs</div>
+          <div className="text-slate-500 text-[9px] text-center leading-none">vs</div>
           <TeamSlot team={matchup.away} label={matchup.awayLabel} />
         </div>
-      </div>
-      {/* Right: city top, date+time bottom */}
-      <div className="flex flex-col items-end text-right shrink-0 text-[9px] leading-tight">
-        <span className="text-slate-500">{matchup.venueCity}</span>
-        <div className="flex flex-col mt-4 items-end text-slate-100">
+        <div className="flex flex-col items-end justify-center text-right shrink-0 mb-0.5 text-[9px] leading-tight text-slate-100">
           <span>{matchup.date}</span>
           <span>{matchup.kickoffTime}</span>
         </div>
