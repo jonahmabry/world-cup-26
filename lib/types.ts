@@ -27,6 +27,10 @@ export function fairPlayScore(cards: CardCounts): number {
   return -(cards.yellows + cards.reds * 3 + cards.secondYellows * 3);
 }
 
+// Mathematically clinched status (independent of the provisional qualStatus colouring):
+// 'through' = guaranteed into the Round of 32, 'out' = eliminated, 'none' = undecided.
+export type ClinchStatus = 'through' | 'out' | 'none';
+
 export interface StandingRow {
   team: string;
   groupId: GroupId;
@@ -42,6 +46,7 @@ export interface StandingRow {
   cards: CardCounts;
   fairPlay: number;
   qualStatus: 'auto' | 'best-third' | 'eliminated' | 'pending';
+  clinch: ClinchStatus;
   tiedPendingRanking: boolean;
   provisional: boolean;
 }
