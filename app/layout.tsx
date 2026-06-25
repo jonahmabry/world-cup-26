@@ -26,22 +26,20 @@ export default function RootLayout({
               </h1>
               <Nav />
             </div>
-            <RefreshButton />
+            <div className="flex items-center gap-3 sm:gap-4">
+              <a
+                href="https://github.com/jonahmabry/world-cup-26"
+                target="_blank"
+                rel="noreferrer"
+                className="text-sm text-slate-400 hover:text-slate-200 transition-colors shrink-0"
+              >
+                GitHub ↗
+              </a>
+              <RefreshButton />
+            </div>
           </div>
         </header>
         <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">{children}</main>
-        <footer className="border-t border-slate-800 px-4 py-3 text-xs text-slate-500">
-          <div className="max-w-7xl mx-auto">
-            <a
-              href="https://github.com/jonahmabry/world-cup-26"
-              target="_blank"
-              rel="noreferrer"
-              className="hover:text-slate-300 transition-colors"
-            >
-              View source on GitHub ↗
-            </a>
-          </div>
-        </footer>
         <Analytics />
         <SpeedInsights />
       </body>
