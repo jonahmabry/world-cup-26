@@ -1,5 +1,17 @@
 # Changelog
 
+## 1.0.0
+
+### Major Changes
+
+- [#28](https://github.com/jonahmabry/world-cup-26/pull/28) [`5c96f2b`](https://github.com/jonahmabry/world-cup-26/commit/5c96f2b9de7a0fbf920c90eb8aaac0c5c4a24581) Thanks [@jonahmabry](https://github.com/jonahmabry)! - 🏆 **v1.0.0** — the public launch milestone. The tracker now ships live group standings with mathematical clinch/elimination badges, a projected knockout bracket, and a full match schedule, plus a persistent link to the source on GitHub. From this release onward the project follows standard semver (major = breaking, minor = feature, patch = fix).
+
+### Minor Changes
+
+- [#28](https://github.com/jonahmabry/world-cup-26/pull/28) [`5c96f2b`](https://github.com/jonahmabry/world-cup-26/commit/5c96f2b9de7a0fbf920c90eb8aaac0c5c4a24581) Thanks [@jonahmabry](https://github.com/jonahmabry)! - Add `✓ THROUGH` / `✗ OUT` clinch badges to the group standings tables and the best-thirds table. Badges appear only once a team is **mathematically** guaranteed into the Round of 32 (clinched top-2 or a clinched best-third spot) or eliminated — distinct from, and shown alongside, the existing position-based row colouring. A new conservative bounded engine (`lib/engine/qualification.ts`) reuses the group-outcome enumeration and bounds the cross-group best-thirds race, so it never reports a false clinch and treats in-progress matches as undecided.
+
+- [#25](https://github.com/jonahmabry/world-cup-26/pull/25) [`d1f2dc0`](https://github.com/jonahmabry/world-cup-26/commit/d1f2dc0a7f0099bad0c16aebd2ad4fe6b0baafda) Thanks [@jonahmabry](https://github.com/jonahmabry)! - Add `/schedule` page showing all 72 group-stage fixtures and knockout projections, organized by phase (Matchday 1–3, R32–Final) with a ±1 sliding-window phase nav. Group rows show live scores or kickoff times; knockout rows show projected matchups with clinch-based R32 slot auto-fill. Adds `PhaseKey`, `Phase`, and `GroupFixture` types, a 72-fixture static group schedule, group-position clinch detection via exhaustive `computeGroupStandings` enumeration, ISO dates on all knockout schedule entries, and `matches` on the pipeline snapshot.
+
 ## 0.1.6
 
 ### Patch Changes
