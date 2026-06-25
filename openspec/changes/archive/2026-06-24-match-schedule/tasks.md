@@ -100,7 +100,7 @@
 ## 10. Finalize
 
 - [x] 10.1 Run `npm test` and `npm run build`; fix any failures.
-- [ ] 10.2 Manual check: `/schedule` defaults to the current phase, ±1 buttons navigate and
+- [x] 10.2 Manual check: `/schedule` defaults to the current phase, ±1 buttons navigate and
   update the URL, days render in order with scores/times + venue, R32 placeholders/clinch behave.
-- [ ] 10.3 Add a changeset (per `release-automation`) describing the new `/schedule` section.
-- [ ] 10.4 Commit, push `feat/match-schedule`, and open a PR (per AGENTS.md).
+- [x] 10.3 Add a changeset (per `release-automation`) describing the new `/schedule` section.
+- [x] 10.4 Commit, push `feat/match-schedule`, and open a PR (per AGENTS.md).
