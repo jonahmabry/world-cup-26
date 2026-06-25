@@ -36,15 +36,15 @@ export default async function StandingsPage() {
           <span className="w-2 h-2 rounded-sm bg-amber-800 inline-block" /> Best third (advancing)
         </span>
         <span className="flex items-center gap-1.5">
-          <span className="w-2 h-2 rounded-sm bg-red-900 inline-block" /> Eliminated
+          <span className="w-2 h-2 rounded-sm bg-red-900 inline-block" /> Eliminated (current)
         </span>
         <span className="flex items-center gap-1.5">
           <span className="text-[10px] text-emerald-400 font-bold tracking-wide">✓</span>
-          Clinched — through to R32 (mathematically)
+          Clinched (through to R32)
         </span>
         <span className="flex items-center gap-1.5">
           <span className="text-[10px] text-red-400 font-bold tracking-wide">✗</span>
-          Eliminated (mathematically)
+          Eliminated (confirmed)
         </span>
       </div>
 
