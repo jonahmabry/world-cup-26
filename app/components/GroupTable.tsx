@@ -57,7 +57,7 @@ export function GroupTable({ standings }: { standings: GroupStandings }) {
                       LIVE
                     </span>
                   )}
-                  <ClinchBadge clinch={row.clinch} />
+                  <ClinchBadge clinch={row.clinch} iconOnly />
                 </span>
               </td>
               <td className="px-0.5 py-2 text-center text-slate-300 whitespace-nowrap">{row.mp}</td>
