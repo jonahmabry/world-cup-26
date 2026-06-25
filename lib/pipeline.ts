@@ -131,6 +131,7 @@ export async function runPipeline(): Promise<Snapshot> {
     allThirds,
     advancingThirds: thirdsRanking.advancing,
     bracket,
+    matches: allMatches,
     lastUpdated: new Date().toISOString(),
     hasStaleData,
   };
