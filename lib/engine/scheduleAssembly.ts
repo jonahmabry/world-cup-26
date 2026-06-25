@@ -1,4 +1,4 @@
-import type { BracketMatchup, GroupFixture, MatchResult, Phase } from '@/lib/types';
+import type { BracketMatchup, GroupFixture, MatchResult, MatchStatus, Phase } from '@/lib/types';
 import type { GroupId } from '@/lib/types';
 import { GROUP_SCHEDULE, THIRD_PLACE_SLOT_LABELS } from './groupSchedule';
 import { KNOCKOUT_SCHEDULE } from './knockoutSchedule';
@@ -40,6 +40,13 @@ export interface ScheduleDaySection {
 const GROUP_PHASES = new Set(['MD1', 'MD2', 'MD3']);
 const KNOCKOUT_PHASES = new Set(['R32', 'R16', 'QF', 'SF', 'ThirdPlace', 'Final']);
 
+// ESPN's 'scheduled' state maps to the schedule's 'upcoming' row status.
+function toRowStatus(status: MatchStatus): MatchRowStatus {
+  if (status === 'final') return 'final';
+  if (status === 'in-progress') return 'in-progress';
+  return 'upcoming';
+}
+
 // Match a MatchResult to a GroupFixture by groupId + unordered home/away pair.
 function findMatchResult(
   fixture: GroupFixture,
@@ -79,7 +86,7 @@ function buildGroupRows(phase: Phase, matches: MatchResult[]): GroupMatchRow[] {
       fixture,
       homeScore,
       awayScore,
-      status: result.status as MatchRowStatus,
+      status: toRowStatus(result.status),
       isoDate: fixture.isoDate,
     };
   });

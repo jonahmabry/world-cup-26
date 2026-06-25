@@ -25,6 +25,7 @@ function makeResult(
 }
 
 const MD1: Phase = { key: 'MD1', label: 'Matchday 1', startDate: '2026-06-11', endDate: '2026-06-17' };
+const MD2: Phase = { key: 'MD2', label: 'Matchday 2', startDate: '2026-06-18', endDate: '2026-06-23' };
 const R32: Phase = { key: 'R32', label: 'Round of 32', startDate: '2026-06-28', endDate: '2026-07-03' };
 
 describe('buildSchedule — group phase fixture join', () => {
@@ -49,7 +50,7 @@ describe('buildSchedule — group phase fixture join', () => {
     // ESPN result: homeTeam='Bosnia-Herzegovina' (non-canonical), awayTeam='Switzerland'
     // Normalization must still match them via the unordered pair.
     const match = makeResult('B', 'Bosnia-Herzegovina', 'Switzerland', 1, 2);
-    const sections = buildSchedule(MD1, [match], []);
+    const sections = buildSchedule(MD2, [match], []);
     const allRows = sections.flatMap((s) => s.rows);
     const row = allRows.find(
       (r) =>
@@ -71,7 +72,7 @@ describe('buildSchedule — group phase fixture join', () => {
   it('handles reversed home/away in the ESPN result', () => {
     // Fixture: home=Switzerland away=Bosnia; ESPN result: home=Bosnia away=Switzerland
     const match = makeResult('B', 'Bosnia and Herzegovina', 'Switzerland', 2, 1);
-    const sections = buildSchedule(MD1, [match], []);
+    const sections = buildSchedule(MD2, [match], []);
     const allRows = sections.flatMap((s) => s.rows);
     const row = allRows.find(
       (r) =>
