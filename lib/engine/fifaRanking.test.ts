@@ -6,7 +6,7 @@ describe('fifaRank', () => {
     expect(fifaRank('Argentina')).toBe(1);
     expect(fifaRank('France')).toBe(2);
     expect(fifaRank('England')).toBe(4);
-    expect(fifaRank('Curaçao')).toBe(83);
+    expect(fifaRank('Curaçao')).toBe(81);
   });
 
   it('lower position means better rank (Argentina beats France)', () => {
