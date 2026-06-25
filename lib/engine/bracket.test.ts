@@ -9,7 +9,7 @@ function makeRow(team: string, groupId: GroupId, position: number): StandingRow 
     team, groupId, position, mp: 3, w: 0, d: 0, l: 0,
     gf: 0, ga: 0, gd: 0, pts: 0,
     cards: { yellows: 0, reds: 0, secondYellows: 0 },
-    fairPlay: 0, qualStatus: 'pending', tiedPendingRanking: false, provisional: false,
+    fairPlay: 0, qualStatus: 'pending', clinch: 'none', tiedPendingRanking: false, provisional: false,
   };
 }
 

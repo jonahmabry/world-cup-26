@@ -215,6 +215,7 @@ export function computeGroupStandings(allMatches: MatchResult[]): GroupStandings
       cards: { yellows: s.yellows, reds: s.reds, secondYellows: s.secondYellows },
       fairPlay: fairPlayScore({ yellows: s.yellows, reds: s.reds, secondYellows: s.secondYellows }),
       qualStatus: 'pending' as const,
+      clinch: 'none' as const,
       tiedPendingRanking: pending.has(s.team),
       provisional: provisionalTeams.has(s.team),
     }));

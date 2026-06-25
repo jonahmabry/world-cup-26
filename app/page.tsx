@@ -1,6 +1,7 @@
 import { runPipeline } from '@/lib/pipeline';
 import { GroupTable } from './components/GroupTable';
 import { Flag } from './components/Flag';
+import { ClinchBadge } from './components/ClinchBadge';
 import { initPoller } from '@/lib/poller';
 
 export const dynamic = 'force-dynamic';
@@ -15,7 +16,8 @@ export default async function StandingsPage() {
         <div>
           <h2 className="text-xl font-bold text-slate-100">Group Standings</h2>
           <p className="text-xs text-slate-500 mt-0.5">
-            Standings are live and updated on refresh — color coding reflects current snapshot
+            Standings are live and updated on refresh — colours reflect the current snapshot,
+            while ✓/✗ badges mark teams mathematically clinched or eliminated
           </p>
         </div>
         <div className="text-xs text-slate-600">
@@ -36,7 +38,14 @@ export default async function StandingsPage() {
         <span className="flex items-center gap-1.5">
           <span className="w-2 h-2 rounded-sm bg-red-900 inline-block" /> Eliminated
         </span>
-
+        <span className="flex items-center gap-1.5">
+          <span className="text-[10px] text-emerald-400 font-bold tracking-wide">✓ THROUGH</span>
+          Clinched (mathematically)
+        </span>
+        <span className="flex items-center gap-1.5">
+          <span className="text-[10px] text-red-400 font-bold tracking-wide">✗ OUT</span>
+          Eliminated (mathematically)
+        </span>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
@@ -75,6 +84,7 @@ export default async function StandingsPage() {
                       <span className="flex items-center gap-1.5 min-w-0">
                         <Flag name={row.team} />
                         <span className="truncate">{row.team}</span>
+                        <ClinchBadge clinch={row.clinch} />
                       </span>
                     </td>
                     <td className="py-1.5 px-2 text-slate-400">{row.groupId}</td>

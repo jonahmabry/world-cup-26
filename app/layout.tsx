@@ -7,7 +7,7 @@ import { SpeedInsights } from '@vercel/speed-insights/next';
 
 export const metadata: Metadata = {
   title: 'World Cup 2026 Tracker',
-  description: 'Live group standings, projected bracket, and player stats',
+  description: 'Live group standings, clinch tracker, match schedule, and projected knockout bracket for the FIFA World Cup 2026',
 };
 
 export default function RootLayout({
@@ -30,6 +30,18 @@ export default function RootLayout({
           </div>
         </header>
         <main className="flex-1 max-w-7xl mx-auto w-full px-4 py-6">{children}</main>
+        <footer className="border-t border-slate-800 px-4 py-3 text-xs text-slate-500">
+          <div className="max-w-7xl mx-auto">
+            <a
+              href="https://github.com/jonahmabry/world-cup-26"
+              target="_blank"
+              rel="noreferrer"
+              className="hover:text-slate-300 transition-colors"
+            >
+              View source on GitHub ↗
+            </a>
+          </div>
+        </footer>
         <Analytics />
         <SpeedInsights />
       </body>

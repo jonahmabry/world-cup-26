@@ -1,4 +1,4 @@
-import type { GroupId, MatchResult } from '@/lib/types';
+import type { GroupId, GroupStandings, MatchResult } from '@/lib/types';
 import type { GroupFixture } from '@/lib/types';
 import { computeGroupStandings } from './standings';
 import { GROUP_SCHEDULE } from './groupSchedule';
@@ -40,21 +40,22 @@ function syntheticResult(
   };
 }
 
-// Returns a Map<1|2, teamName> for positions that are mathematically locked.
-// A position is locked iff the same team occupies it across every possible outcome
-// of the group's remaining (non-final) fixtures.
-export function lockedGroupPositions(
+// Every reachable final standings table for a group: one GroupStandings per
+// combination of W/D/L outcomes for the group's remaining (non-final) fixtures.
+// Standings are rebuilt from finals-only + synthetic outcomes, so in-progress
+// matches are treated as undecided rather than folded in as provisional results.
+export function enumerateGroupOutcomes(
   groupId: GroupId,
   matches: MatchResult[],
-): Map<number, string> {
+): GroupStandings[] {
+  const finals = matches.filter((m) => m.groupId === groupId && m.status === 'final');
+
   const remaining = GROUP_SCHEDULE.filter((f) => {
     if (f.groupId !== groupId) return false;
-    return !matches.some(
+    return !finals.some(
       (m) =>
-        m.status === 'final' &&
-        m.groupId === groupId &&
-        ((m.homeTeam === f.home && m.awayTeam === f.away) ||
-          (m.homeTeam === f.away && m.awayTeam === f.home)),
+        (m.homeTeam === f.home && m.awayTeam === f.away) ||
+        (m.homeTeam === f.away && m.awayTeam === f.home),
     );
   });
 
@@ -64,12 +65,7 @@ export function lockedGroupPositions(
   const count = remaining.length;
   const total = Math.pow(3, count);
 
-  // position → team → how many combinations have that team in that position
-  const positionTeamCounts: Map<number, Map<string, number>> = new Map([
-    [1, new Map()],
-    [2, new Map()],
-  ]);
-
+  const tables: GroupStandings[] = [];
   for (let i = 0; i < total; i++) {
     const synthetic: MatchResult[] = [];
     let n = i;
@@ -79,10 +75,31 @@ export function lockedGroupPositions(
       n = Math.floor(n / 3);
     }
 
-    const combined = [...matches.filter((m) => m.groupId === groupId && m.status === 'final'), ...synthetic];
+    const combined = [...finals, ...synthetic];
     const standings = computeGroupStandings(combined).find((g) => g.groupId === groupId);
-    if (!standings) continue;
+    if (standings) tables.push(standings);
+  }
 
+  return tables;
+}
+
+// Returns a Map<1|2, teamName> for positions that are mathematically locked.
+// A position is locked iff the same team occupies it across every possible outcome
+// of the group's remaining (non-final) fixtures.
+export function lockedGroupPositions(
+  groupId: GroupId,
+  matches: MatchResult[],
+): Map<number, string> {
+  const tables = enumerateGroupOutcomes(groupId, matches);
+  const total = tables.length;
+
+  // position → team → how many combinations have that team in that position
+  const positionTeamCounts: Map<number, Map<string, number>> = new Map([
+    [1, new Map()],
+    [2, new Map()],
+  ]);
+
+  for (const standings of tables) {
     for (const pos of [1, 2] as const) {
       const row = standings.rows[pos - 1];
       if (!row || row.tiedPendingRanking) continue;
@@ -95,7 +112,7 @@ export function lockedGroupPositions(
   for (const pos of [1, 2] as const) {
     const map = positionTeamCounts.get(pos)!;
     for (const [team, count2] of map) {
-      if (count2 === total) {
+      if (count2 === total && total > 0) {
         locked.set(pos, team);
         break;
       }

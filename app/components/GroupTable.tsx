@@ -1,5 +1,6 @@
 import type { GroupStandings } from '@/lib/types';
 import { Flag } from './Flag';
+import { ClinchBadge } from './ClinchBadge';
 
 function rowBg(qualStatus: string): string {
   if (qualStatus === 'auto') return 'bg-green-950 border-l-2 border-green-500';
@@ -56,6 +57,7 @@ export function GroupTable({ standings }: { standings: GroupStandings }) {
                       LIVE
                     </span>
                   )}
+                  <ClinchBadge clinch={row.clinch} />
                 </span>
               </td>
               <td className="px-0.5 py-2 text-center text-slate-300 whitespace-nowrap">{row.mp}</td>

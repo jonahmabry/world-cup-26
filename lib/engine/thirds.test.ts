@@ -18,7 +18,7 @@ function makeThird(
     gf, ga, gd, pts,
     cards: { yellows, reds: 0, secondYellows: 0 },
     fairPlay: -yellows,
-    qualStatus: 'pending', tiedPendingRanking: false, provisional: false,
+    qualStatus: 'pending', clinch: 'none', tiedPendingRanking: false, provisional: false,
   };
 }
 
@@ -27,7 +27,7 @@ function makeGroup(groupId: GroupId, third: StandingRow): GroupStandings {
     team, groupId, position: pos, mp: 3, w: 0, d: 0, l: 0,
     gf: 0, ga: 0, gd: 0, pts: p,
     cards: { yellows: 0, reds: 0, secondYellows: 0 },
-    fairPlay: 0, qualStatus: 'pending', tiedPendingRanking: false, provisional: false,
+    fairPlay: 0, qualStatus: 'pending', clinch: 'none', tiedPendingRanking: false, provisional: false,
   });
   return {
     groupId,

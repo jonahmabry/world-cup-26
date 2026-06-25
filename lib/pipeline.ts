@@ -5,6 +5,7 @@ import { getLiveMatches, setLiveMatches } from './cache/memory';
 import { writeMatchToDisk, readBackfillWatermark, updateBackfillWatermark } from './cache/disk';
 import { computeGroupStandings } from './engine/standings';
 import { rankThirds } from './engine/thirds';
+import { computeClinchStatuses } from './engine/qualification';
 import { computeBracket } from './engine/bracket';
 
 const TOURNAMENT_START = '20260611';
@@ -96,6 +97,10 @@ export async function runPipeline(): Promise<Snapshot> {
   const groupStandings = computeGroupStandings(allMatches);
   const thirdsRanking = rankThirds(groupStandings);
 
+  // Mathematically clinched status (THROUGH/OUT badges) — independent of the
+  // position-based qualStatus colouring below.
+  const clinch = computeClinchStatuses(groupStandings, allMatches);
+
   const advancingThirdGroups = new Set(thirdsRanking.advancing.map((r) => r.groupId));
   for (const group of groupStandings) {
     const hasResults = group.rows.some((r) => r.mp > 0);
@@ -109,6 +114,7 @@ export async function runPipeline(): Promise<Snapshot> {
       } else {
         row.qualStatus = 'eliminated';
       }
+      row.clinch = clinch.get(`${group.groupId}|${row.team}`) ?? 'none';
     });
   }
 
@@ -121,6 +127,7 @@ export async function runPipeline(): Promise<Snapshot> {
         : advancingThirdGroups.has(r.groupId)
           ? ('best-third' as const)
           : ('eliminated' as const),
+      clinch: clinch.get(`${r.groupId}|${r.team}`) ?? 'none',
     };
   });
 
