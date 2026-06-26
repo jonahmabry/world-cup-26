@@ -10,6 +10,28 @@ Live group standings, projected knockout bracket, and match scores for the FIFA 
 
 ---
 
+## Demo
+
+### Group standings (`/`)
+
+All 12 groups, color-coded by qualification status, with clinch badges and the cross-group best-thirds ranking.
+
+<img src="docs/screenshots/standings.png" alt="Group standings page" width="600">
+
+### Projected knockout bracket (`/bracket`)
+
+The full Round of 32 → Final tree, projected as an "if the group stage ended now" snapshot.
+
+<img src="docs/screenshots/bracket.png" alt="Projected knockout bracket" width="600">
+
+### Match schedule (`/schedule`)
+
+The tournament one phase at a time, grouped by day, with scores, kickoff times, and venues.
+
+<img src="docs/screenshots/schedule.png" alt="Match schedule page" width="600">
+
+---
+
 ## Features
 
 - **Live group standings** — all 12 groups (A–L), color-coded by qualification status (auto-qualified / best-8-thirds / eliminated), updated as scores change
