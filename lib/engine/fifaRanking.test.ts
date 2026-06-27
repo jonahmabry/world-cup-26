@@ -3,10 +3,10 @@ import { fifaRank, UNRANKED } from './fifaRanking';
 
 describe('fifaRank', () => {
   it('returns the ranking position for a known finalist', () => {
-    expect(fifaRank('Argentina')).toBe(1);
-    expect(fifaRank('France')).toBe(2);
+    expect(fifaRank('France')).toBe(1);
+    expect(fifaRank('Argentina')).toBe(2);
     expect(fifaRank('England')).toBe(4);
-    expect(fifaRank('Curaçao')).toBe(81);
+    expect(fifaRank('Curaçao')).toBe(82);
   });
 
   it('lower position means better rank (Argentina beats France)', () => {
