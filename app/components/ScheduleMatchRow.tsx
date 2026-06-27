@@ -43,7 +43,7 @@ export function GroupRow({ row }: { row: GroupMatchRow }) {
         <Flag name={fixture.away} />
       </div>
 
-      <div className="hidden sm:block text-xs text-slate-500 flex-shrink-0 ml-2 text-right min-w-[100px]">
+      <div className="hidden sm:block text-xs text-slate-500 flex-shrink-0 ml-2 text-right min-w-[120px]">
         {fixture.venueCity}
       </div>
     </div>
@@ -65,7 +65,7 @@ export function KnockoutRow({ row }: { row: KnockoutMatchRow }) {
         <TeamSlot name={row.awayName} placeholder={row.awayLabel} />
       </div>
 
-      <div className="hidden sm:block text-xs text-slate-500 flex-shrink-0 ml-2 text-right min-w-[100px]">
+      <div className="hidden sm:block text-xs text-slate-500 flex-shrink-0 ml-2 text-right min-w-[120px]">
         {row.venueCity}
       </div>
     </div>
