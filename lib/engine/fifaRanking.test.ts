@@ -9,8 +9,8 @@ describe('fifaRank', () => {
     expect(fifaRank('Curaçao')).toBe(82);
   });
 
-  it('lower position means better rank (Argentina beats France)', () => {
-    expect(fifaRank('Argentina')).toBeLessThan(fifaRank('France'));
+  it('lower position means better rank (France beats Argentina)', () => {
+    expect(fifaRank('France')).toBeLessThan(fifaRank('Argentina'));
   });
 
   it('all 48 finalists have distinct positions (no ties in snapshot)', () => {
