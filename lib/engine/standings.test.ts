@@ -59,6 +59,22 @@ describe('tiebreaker Step 1 – head-to-head', () => {
   });
 });
 
+describe('knockout matches are excluded from group standings', () => {
+  it('a null-group knockout match never enters any group table', () => {
+    const matches: MatchResult[] = [
+      makeMatch('m1', 'Mexico', 'South Korea', 2, 1),
+      // Knockout match: South Africa (a Group A team) plays Canada with groupId null.
+      { ...makeMatch('k1', 'South Africa', 'Canada', 5, 0), groupId: null, round: 'R32' },
+    ];
+    const groupA = computeGroupStandings(matches).find((g) => g.groupId === 'A')!;
+    const sa = groupA.rows.find((r) => r.team === 'South Africa')!;
+    // The 5-0 knockout result must not inflate South Africa's group record.
+    expect(sa.mp).toBe(0);
+    expect(sa.gf).toBe(0);
+    expect(sa.pts).toBe(0);
+  });
+});
+
 describe('tiebreaker Step 2 – overall stats and tiedPendingRanking', () => {
   it('Step 2 GD: when H2H yields no progress, team with better overall GD ranks higher', () => {
     // Mexico and SK drew H2H (1-1) → equal H2H stats → Step 2

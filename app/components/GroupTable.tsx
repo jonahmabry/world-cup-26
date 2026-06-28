@@ -9,7 +9,7 @@ function rowBg(qualStatus: string): string {
   return 'border-l-2 border-slate-700'; // pending — no color
 }
 
-export function GroupTable({ standings }: { standings: GroupStandings }) {
+export function GroupTable({ standings, hideClinch = false }: { standings: GroupStandings; hideClinch?: boolean }) {
   return (
     <div className="rounded-lg overflow-hidden border border-slate-700">
       <div className="bg-slate-800 px-3 py-2 flex items-center justify-between">
@@ -57,7 +57,7 @@ export function GroupTable({ standings }: { standings: GroupStandings }) {
                       LIVE
                     </span>
                   )}
-                  <ClinchBadge clinch={row.clinch} iconOnly />
+                  {!hideClinch && <ClinchBadge clinch={row.clinch} iconOnly />}
                 </span>
               </td>
               <td className="px-0.5 py-2 text-center text-slate-300 whitespace-nowrap">{row.mp}</td>

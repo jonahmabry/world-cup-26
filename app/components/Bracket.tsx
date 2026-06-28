@@ -14,7 +14,7 @@ const CONN_W = 28;
 // How far above/below card center the connector arm exits the card.
 const CONN_INSET = 13;
 
-function TeamSlot({ team, label }: { team: BracketTeam; label: string }) {
+function TeamSlot({ team, label, faded = false }: { team: BracketTeam; label: string; faded?: boolean }) {
   if (team.kind === 'tbd-pending-ranking') {
     return <div className="text-yellow-400 text-[11px] italic">TBD</div>;
   }
@@ -28,8 +28,9 @@ function TeamSlot({ team, label }: { team: BracketTeam; label: string }) {
     return <div className="text-slate-500 text-[11px] italic truncate">{label}</div>;
   }
   const rank = fifaRank(team.name);
+  // The losing team's row is faded to indicate the loss.
   return (
-      <div className="flex items-baseline gap-1 min-w-0">
+      <div className={`flex items-baseline gap-1 min-w-0 ${faded ? 'opacity-60' : ''}`}>
         <Flag name={team.name} className="self-center"/>
         <span
             className="relative top-[-0.5px] w-2.5 shrink-0 text-center text-yellow-500 text-[10px] font-mono tabular-nums"
@@ -37,32 +38,77 @@ function TeamSlot({ team, label }: { team: BracketTeam; label: string }) {
         >
           {rank !== UNRANKED ? rank : ''}
         </span>
-        <span className="text-slate-100 font-medium text-xs truncate">{team.name}</span>
+        <span className={`font-medium text-xs truncate ${faded ? 'text-slate-500' : 'text-slate-100'}`}>{team.name}</span>
       </div>
   );
 }
 
+// Score for one team row on a played card. Renders penalty goals in parens, e.g. "1 (4)".
+function ScoreCell({ score, shootout, faded }: { score: number; shootout?: number | null; faded: boolean }) {
+  return (
+    <span className={`shrink-0 font-mono font-semibold text-xs tabular-nums ${faded ? 'text-slate-500' : 'text-slate-100'}`}>
+      {score}
+      {shootout != null ? ` (${shootout})` : ''}
+    </span>
+  );
+}
+
 function MatchCard({ matchup }: { matchup: BracketMatchup }) {
+  const isLive = matchup.status === 'in-progress';
+  const isFinal = matchup.status === 'final';
+  const isPlayed = isLive || isFinal;
+  const decidedByPens =
+    isFinal && (matchup.homeShootout != null || matchup.awayShootout != null);
+
+  // Losing team's row is faded (only meaningful once a winner is decided).
+  const homeFaded = matchup.winner === 'away';
+  const awayFaded = matchup.winner === 'home';
+
+  // Top-left slot: match number when unplayed, LIVE while in progress, FT / FT-Pens when final.
+  const topLeft = isLive ? (
+    <span className="font-bold uppercase text-red-400 animate-pulse shrink-0">LIVE</span>
+  ) : isFinal ? (
+    <span className="font-mono font-semibold uppercase text-slate-300 shrink-0">
+      {decidedByPens ? 'FT-Pens' : 'FT'}
+    </span>
+  ) : (
+    <span className="font-mono uppercase shrink-0">{matchup.matchId}</span>
+  );
+
   return (
     <div className="bg-slate-800 rounded border border-slate-700 px-2 py-1.5 flex flex-col gap-1" style={{ height: CARD_H }}>
-      {/* Top row: match ID (left) + city (right) */}
+      {/* Top row: status/match ID (left) + city (right) */}
       <div className="flex flex-row justify-between items-center min-w-0 text-[9px] text-slate-500">
-        <span className="font-mono uppercase shrink-0">{matchup.matchId}</span>
+        {topLeft}
         <span className="truncate text-right">{matchup.venueCity}</span>
       </div>
 
-      {/* Bottom row: team column (with FIFA rankings) + date/time column */}
-      <div className="flex flex-row gap-1 flex-1 min-w-0">
-        <div className="flex-1 flex flex-col justify-center space-y-0.5 min-w-0">
-          <TeamSlot team={matchup.home} label={matchup.homeLabel} />
-          <div className="text-slate-500 text-[9px] text-center leading-none">vs</div>
-          <TeamSlot team={matchup.away} label={matchup.awayLabel} />
+      {/* Bottom row */}
+      {isPlayed ? (
+        // Played: scores stacked, each aligned to its team row; date/time replaced.
+        <div className="flex-1 flex flex-col justify-center space-y-2 min-w-0">
+          <div className="flex items-center justify-between gap-1 min-w-0">
+            <TeamSlot team={matchup.home} label={matchup.homeLabel} faded={homeFaded} />
+            <ScoreCell score={matchup.homeScore ?? 0} shootout={matchup.homeShootout} faded={homeFaded} />
+          </div>
+          <div className="flex items-center justify-between gap-1 min-w-0">
+            <TeamSlot team={matchup.away} label={matchup.awayLabel} faded={awayFaded} />
+            <ScoreCell score={matchup.awayScore ?? 0} shootout={matchup.awayShootout} faded={awayFaded} />
+          </div>
         </div>
-        <div className="flex flex-col items-end justify-center text-right shrink-0 mb-0.5 text-[9px] leading-tight text-slate-100">
-          <span>{matchup.date}</span>
-          <span>{matchup.kickoffTime}</span>
+      ) : (
+        // Unplayed: existing layout — team column (with FIFA rankings) + date/time column.
+        <div className="flex flex-row gap-1 flex-1 min-w-0">
+          <div className="flex-1 flex flex-col justify-center space-y-2 min-w-0">
+            <TeamSlot team={matchup.home} label={matchup.homeLabel} />
+            <TeamSlot team={matchup.away} label={matchup.awayLabel} />
+          </div>
+          <div className="flex flex-col items-end justify-center text-right shrink-0 mb-0.5 text-[9px] leading-tight text-slate-100">
+            <span>{matchup.date}</span>
+            <span>{matchup.kickoffTime}</span>
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 }
@@ -97,10 +143,15 @@ export function Bracket({ matchups }: { matchups: BracketMatchup[] }) {
 
   const thirdPlace = matchups.find((m) => m.round === 'ThirdPlace');
 
+  // Switch the caption once any knockout match has a result (live or final).
+  const knockoutStarted = matchups.some((m) => m.status !== undefined);
+
   return (
     <div>
       <p className="text-slate-400 text-sm mb-4 italic">
-        Projected bracket — if the group stage ended now. Updates on each refresh.
+        {knockoutStarted
+          ? 'Live knockout bracket — winners advance as results come in. Updates on each refresh.'
+          : 'Projected bracket — if the group stage ended now. Updates on each refresh.'}
       </p>
 
       <div className="overflow-x-auto pb-4">

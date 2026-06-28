@@ -156,6 +156,125 @@ describe('parseEvent and parseCards — via scoreboard fixture', () => {
   });
 });
 
+interface KnockoutOpts {
+  state?: string;
+  homeScore?: string;
+  awayScore?: string;
+  homeWinner?: boolean;
+  awayWinner?: boolean;
+  homeShootout?: string | number;
+  awayShootout?: string | number;
+}
+
+function makeKnockoutEvent(id: string, note: string, homeTeam: string, awayTeam: string, opts: KnockoutOpts = {}) {
+  const home: Record<string, unknown> = {
+    homeAway: 'home',
+    team: { displayName: homeTeam, abbreviation: homeTeam.slice(0, 3).toUpperCase(), id: '1' },
+    score: opts.homeScore ?? '1',
+  };
+  const away: Record<string, unknown> = {
+    homeAway: 'away',
+    team: { displayName: awayTeam, abbreviation: awayTeam.slice(0, 3).toUpperCase(), id: '2' },
+    score: opts.awayScore ?? '0',
+  };
+  if (opts.homeWinner !== undefined) home.winner = opts.homeWinner;
+  if (opts.awayWinner !== undefined) away.winner = opts.awayWinner;
+  if (opts.homeShootout !== undefined) home.shootoutScore = opts.homeShootout;
+  if (opts.awayShootout !== undefined) away.shootoutScore = opts.awayShootout;
+  return {
+    id,
+    date: '2026-06-28T19:00:00Z',
+    status: { type: { state: opts.state ?? 'post' } },
+    competitions: [{ altGameNote: note, competitors: [home, away], details: [] }],
+  };
+}
+
+describe('parseEvent — knockout matches', () => {
+  async function parseOne(event: ReturnType<typeof makeKnockoutEvent>) {
+    vi.stubGlobal('fetch', vi.fn().mockResolvedValue({ ok: true, json: async () => ({ events: [event] }) }));
+    const results = await fetchScoreboardRange('20260628', '20260628');
+    return results;
+  }
+
+  it('returns a knockout match with null groupId and the parsed round', async () => {
+    const results = await parseOne(
+      makeKnockoutEvent('m73', 'FIFA World Cup, Round of 32', 'South Africa', 'Canada', {
+        homeScore: '0',
+        awayScore: '1',
+        awayWinner: true,
+      }),
+    );
+    expect(results).toHaveLength(1);
+    expect(results[0]).toMatchObject({
+      id: 'm73',
+      homeTeam: 'South Africa',
+      awayTeam: 'Canada',
+      groupId: null,
+      round: 'R32',
+      status: 'final',
+      winner: 'away',
+    });
+  });
+
+  it('maps each knockout round note to its KnockoutRound', async () => {
+    const cases: Array<[string, string]> = [
+      ['FIFA World Cup, Round of 32', 'R32'],
+      ['FIFA World Cup, Round of 16', 'R16'],
+      ['FIFA World Cup, Quarterfinal', 'QF'],
+      ['FIFA World Cup, Semifinal', 'SF'],
+      ['FIFA World Cup, Third Place', 'ThirdPlace'],
+      ['FIFA World Cup, Final', 'Final'],
+    ];
+    for (const [note, round] of cases) {
+      const results = await parseOne(makeKnockoutEvent('k', note, 'Spain', 'France'));
+      expect(results[0]?.round).toBe(round);
+      expect(results[0]?.groupId).toBeNull();
+    }
+  });
+
+  it('skips an event that resolves to neither a group nor a known round', async () => {
+    const results = await parseOne(makeKnockoutEvent('x', 'Some Friendly Match', 'Spain', 'France'));
+    expect(results).toHaveLength(0);
+  });
+
+  it('captures the winner from the ESPN per-competitor flag even when the score is level', async () => {
+    const results = await parseOne(
+      makeKnockoutEvent('m', 'FIFA World Cup, Round of 16', 'Brazil', 'Argentina', {
+        homeScore: '1',
+        awayScore: '1',
+        awayWinner: true,
+        homeShootout: '2',
+        awayShootout: '4',
+      }),
+    );
+    expect(results[0]).toMatchObject({ winner: 'away', homeShootout: 2, awayShootout: 4 });
+  });
+
+  it('parses a numeric shootoutScore defensively', async () => {
+    const results = await parseOne(
+      makeKnockoutEvent('m', 'FIFA World Cup, Quarterfinal', 'Spain', 'France', {
+        homeScore: '0',
+        awayScore: '0',
+        homeWinner: true,
+        homeShootout: 5,
+        awayShootout: 3,
+      }),
+    );
+    expect(results[0]).toMatchObject({ winner: 'home', homeShootout: 5, awayShootout: 3 });
+  });
+
+  it('returns a knockout match with null shootout when no penalty data is present', async () => {
+    const results = await parseOne(
+      makeKnockoutEvent('m', 'FIFA World Cup, Round of 32', 'Spain', 'France', {
+        homeScore: '2',
+        awayScore: '1',
+        homeWinner: true,
+      }),
+    );
+    expect(results[0]).toMatchObject({ winner: 'home', homeShootout: null, awayShootout: null });
+  });
+});
+
 describe('detectNewlyFinished', () => {
   const zero = { yellows: 0, reds: 0, secondYellows: 0 };
   function makeResult(id: string, status: MatchResult['status']): MatchResult {

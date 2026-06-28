@@ -48,7 +48,8 @@ export function enumerateGroupOutcomes(
   groupId: GroupId,
   matches: MatchResult[],
 ): GroupStandings[] {
-  const finals = matches.filter((m) => m.groupId === groupId && m.status === 'final');
+  // Knockout matches carry a null groupId; `m.groupId === groupId` excludes them.
+  const finals = matches.filter((m) => m.groupId !== null && m.groupId === groupId && m.status === 'final');
 
   const remaining = GROUP_SCHEDULE.filter((f) => {
     if (f.groupId !== groupId) return false;

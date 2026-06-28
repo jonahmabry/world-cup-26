@@ -1,8 +1,8 @@
 import { describe, it, expect } from 'vitest';
-import type { GroupId, GroupStandings, StandingRow } from '@/lib/types';
+import type { BracketMatchup, BracketTeam, GroupId, GroupStandings, KnockoutRound, MatchResult, StandingRow } from '@/lib/types';
 import { GROUP_IDS } from '@/lib/types';
 import { rankThirds } from './thirds';
-import { computeBracket } from './bracket';
+import { computeBracket, applyKnockoutResults } from './bracket';
 
 function makeRow(team: string, groupId: GroupId, position: number): StandingRow {
   return {
@@ -203,5 +203,102 @@ describe('computeBracket', () => {
     expect(m73.away.kind).toBe('team');
     expect(m73.home).toEqual({ kind: 'team', name: 'RA' });
     expect(m73.away).toEqual({ kind: 'team', name: 'RB' });
+  });
+});
+
+const ZERO = { yellows: 0, reds: 0, secondYellows: 0 };
+
+function koResult(
+  round: KnockoutRound,
+  home: string,
+  away: string,
+  homeScore: number,
+  awayScore: number,
+  opts: { winner?: 'home' | 'away'; status?: MatchResult['status']; homeShootout?: number; awayShootout?: number } = {},
+): MatchResult {
+  return {
+    id: `${round}-${home}-${away}`,
+    homeTeam: home,
+    awayTeam: away,
+    homeScore,
+    awayScore,
+    status: opts.status ?? 'final',
+    groupId: null,
+    round,
+    homeShootout: opts.homeShootout ?? null,
+    awayShootout: opts.awayShootout ?? null,
+    winner: opts.winner ?? null,
+    kickoff: '2026-06-28T19:00:00Z',
+    homeCards: ZERO,
+    awayCards: ZERO,
+  };
+}
+
+describe('applyKnockoutResults', () => {
+  const groups = makeGroups();
+  const thirds = rankThirds(groups);
+  const bracket = computeBracket(groups, thirds);
+
+  it('advances the R32 winner into the R16 slot fed by that match', () => {
+    // M73 (Runner-up A 'RA' vs Runner-up B 'RB'); M90 feeds from winner-of M73.
+    const enriched = applyKnockoutResults(bracket, [koResult('R32', 'RA', 'RB', 2, 1, { winner: 'home' })]);
+
+    const m73 = enriched.find((m) => m.matchId === 'M73')!;
+    expect(m73.status).toBe('final');
+    expect(m73.winner).toBe('home');
+    expect(m73.homeScore).toBe(2);
+    expect(m73.awayScore).toBe(1);
+
+    const m90 = enriched.find((m) => m.matchId === 'M90')!;
+    expect(m90.home).toEqual({ kind: 'team', name: 'RA' });
+    // The other feed (M75) is unresolved, so M90's away stays a placeholder.
+    expect(m90.away).toEqual({ kind: 'winner-of', matchId: 'M75' });
+  });
+
+  it('advances the penalty winner despite a level regulation score', () => {
+    const enriched = applyKnockoutResults(bracket, [
+      koResult('R32', 'RA', 'RB', 1, 1, { winner: 'away', homeShootout: 2, awayShootout: 4 }),
+    ]);
+
+    const m73 = enriched.find((m) => m.matchId === 'M73')!;
+    expect(m73.winner).toBe('away');
+    expect(m73.homeShootout).toBe(2);
+    expect(m73.awayShootout).toBe(4);
+
+    const m90 = enriched.find((m) => m.matchId === 'M90')!;
+    expect(m90.home).toEqual({ kind: 'team', name: 'RB' });
+  });
+
+  it('feeds the two Semi-final losers into the third-place play-off (M103) and winners into the Final', () => {
+    const makeMatchup = (matchId: string, round: KnockoutRound, home: BracketTeam, away: BracketTeam): BracketMatchup => ({
+      matchId, home, away, homeLabel: '', awayLabel: '', round, slot: 1, venueCity: '', date: '', kickoffTime: '',
+    });
+    const mini: BracketMatchup[] = [
+      makeMatchup('M101', 'SF', { kind: 'team', name: 'Alpha' }, { kind: 'team', name: 'Bravo' }),
+      makeMatchup('M102', 'SF', { kind: 'team', name: 'Charlie' }, { kind: 'team', name: 'Delta' }),
+      makeMatchup('M103', 'ThirdPlace', { kind: 'loser-of', matchId: 'M101' }, { kind: 'loser-of', matchId: 'M102' }),
+      makeMatchup('M104', 'Final', { kind: 'winner-of', matchId: 'M101' }, { kind: 'winner-of', matchId: 'M102' }),
+    ];
+
+    const enriched = applyKnockoutResults(mini, [
+      koResult('SF', 'Alpha', 'Bravo', 2, 0, { winner: 'home' }),
+      koResult('SF', 'Charlie', 'Delta', 1, 3, { winner: 'away' }),
+    ]);
+
+    const m103 = enriched.find((m) => m.matchId === 'M103')!;
+    expect(m103.home).toEqual({ kind: 'team', name: 'Bravo' });   // loser of M101
+    expect(m103.away).toEqual({ kind: 'team', name: 'Charlie' });  // loser of M102
+
+    const m104 = enriched.find((m) => m.matchId === 'M104')!;
+    expect(m104.home).toEqual({ kind: 'team', name: 'Alpha' });    // winner of M101
+    expect(m104.away).toEqual({ kind: 'team', name: 'Delta' });    // winner of M102
+  });
+
+  it('leaves a matchup with unresolved feeders as placeholders and no result', () => {
+    const enriched = applyKnockoutResults(bracket, []);
+    const m90 = enriched.find((m) => m.matchId === 'M90')!;
+    expect(m90.home).toEqual({ kind: 'winner-of', matchId: 'M73' });
+    expect(m90.away).toEqual({ kind: 'winner-of', matchId: 'M75' });
+    expect(m90.status).toBeUndefined();
   });
 });

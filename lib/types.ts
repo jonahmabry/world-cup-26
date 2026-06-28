@@ -16,7 +16,14 @@ export interface MatchResult {
   homeScore: number;
   awayScore: number;
   status: MatchStatus;
-  groupId: GroupId;
+  // Group-stage matches carry their group; knockout matches carry null and a `round` instead.
+  groupId: GroupId | null;
+  round?: KnockoutRound;
+  // Penalty shootout scores, present only when a knockout match was decided on penalties.
+  homeShootout?: number | null;
+  awayShootout?: number | null;
+  // Which side ESPN marks as the winner (authoritative for advancement, incl. penalties).
+  winner?: 'home' | 'away' | null;
   kickoff: string;
   homeCards: CardCounts;
   awayCards: CardCounts;
@@ -95,6 +102,13 @@ export interface BracketMatchup {
   venueCity: string;
   date: string;
   kickoffTime: string;
+  // Live/final result, enriched from ingested knockout matches (undefined until played).
+  status?: MatchStatus;
+  homeScore?: number;
+  awayScore?: number;
+  homeShootout?: number | null;
+  awayShootout?: number | null;
+  winner?: 'home' | 'away';
 }
 
 export interface Snapshot {

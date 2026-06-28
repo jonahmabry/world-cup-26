@@ -2,6 +2,7 @@ import { runPipeline } from '@/lib/pipeline';
 import { GroupTable } from './components/GroupTable';
 import { Flag } from './components/Flag';
 import { ClinchBadge } from './components/ClinchBadge';
+import { isGroupStageComplete } from '@/lib/engine/clinch';
 import { initPoller } from '@/lib/poller';
 
 export const dynamic = 'force-dynamic';
@@ -9,6 +10,10 @@ export const dynamic = 'force-dynamic';
 export default async function StandingsPage() {
   initPoller();
   const snapshot = await runPipeline();
+
+  // Once every group fixture is final, advancement is fully determined — the clinch
+  // badges no longer add information, so they are hidden (computation is retained).
+  const groupStageComplete = isGroupStageComplete(snapshot.matches);
 
   return (
     <div>
@@ -50,7 +55,7 @@ export default async function StandingsPage() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {snapshot.groups.map((g) => (
-          <GroupTable key={g.groupId} standings={g} />
+          <GroupTable key={g.groupId} standings={g} hideClinch={groupStageComplete} />
         ))}
       </div>
 
@@ -84,7 +89,7 @@ export default async function StandingsPage() {
                       <span className="flex items-center gap-1.5 min-w-0">
                         <Flag name={row.team} />
                         <span className="truncate">{row.team}</span>
-                        <ClinchBadge clinch={row.clinch} />
+                        {!groupStageComplete && <ClinchBadge clinch={row.clinch} />}
                       </span>
                     </td>
                     <td className="py-1.5 px-2 text-slate-400">{row.groupId}</td>

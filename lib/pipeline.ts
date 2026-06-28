@@ -6,7 +6,7 @@ import { writeMatchToDisk, readBackfillWatermark, updateBackfillWatermark } from
 import { computeGroupStandings } from './engine/standings';
 import { rankThirds } from './engine/thirds';
 import { computeClinchStatuses } from './engine/qualification';
-import { computeBracket } from './engine/bracket';
+import { computeBracket, applyKnockoutResults } from './engine/bracket';
 
 const TOURNAMENT_START = '20260611';
 
@@ -131,7 +131,12 @@ export async function runPipeline(): Promise<Snapshot> {
     };
   });
 
-  const bracket = computeBracket(groupStandings, thirdsRanking);
+  // Project the bracket from standings, then resolve actual knockout results into it
+  // (advancement, SF losers → third place, live/final scores).
+  const bracket = applyKnockoutResults(
+    computeBracket(groupStandings, thirdsRanking),
+    allMatches,
+  );
 
   return {
     groups: groupStandings,

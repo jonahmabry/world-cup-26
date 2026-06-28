@@ -150,3 +150,53 @@ describe('buildSchedule — R32 placeholders', () => {
     }
   });
 });
+
+describe('buildSchedule — knockout rows carry live/final scores', () => {
+  function m73(extra: Partial<BracketMatchup>): BracketMatchup {
+    return {
+      matchId: 'M73',
+      home: { kind: 'team', name: 'South Africa' },
+      away: { kind: 'team', name: 'Canada' },
+      homeLabel: 'Runner-up A',
+      awayLabel: 'Runner-up B',
+      round: 'R32',
+      slot: 3,
+      venueCity: 'Los Angeles',
+      date: 'JUN 28',
+      kickoffTime: '2:00PM',
+      ...extra,
+    };
+  }
+
+  it('passes a final score through to the knockout row', () => {
+    const sections = buildSchedule(R32, [], [m73({ status: 'final', homeScore: 0, awayScore: 1, winner: 'away' })]);
+    const row = sections.flatMap((s) => s.rows).find((r) => r.kind === 'knockout' && r.matchId === 'M73');
+    if (row?.kind !== 'knockout') return expect.fail('Expected a knockout row for M73');
+    expect(row.status).toBe('final');
+    expect(row.homeScore).toBe(0);
+    expect(row.awayScore).toBe(1);
+  });
+
+  it('passes an in-progress score through to the knockout row', () => {
+    const sections = buildSchedule(R32, [], [m73({ status: 'in-progress', homeScore: 1, awayScore: 1 })]);
+    const row = sections.flatMap((s) => s.rows).find((r) => r.kind === 'knockout' && r.matchId === 'M73');
+    if (row?.kind !== 'knockout') return expect.fail('Expected a knockout row for M73');
+    expect(row.status).toBe('in-progress');
+    expect(row.homeScore).toBe(1);
+    expect(row.awayScore).toBe(1);
+  });
+
+  it('carries penalty shootout scores for a final knockout row', () => {
+    const sections = buildSchedule(
+      R32,
+      [],
+      [m73({ status: 'final', homeScore: 1, awayScore: 1, homeShootout: 4, awayShootout: 2, winner: 'home' })],
+    );
+    const row = sections.flatMap((s) => s.rows).find((r) => r.kind === 'knockout' && r.matchId === 'M73');
+    if (row?.kind !== 'knockout') return expect.fail('Expected a knockout row for M73');
+    expect(row.homeScore).toBe(1);
+    expect(row.awayScore).toBe(1);
+    expect(row.homeShootout).toBe(4);
+    expect(row.awayShootout).toBe(2);
+  });
+});
