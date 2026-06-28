@@ -1,5 +1,15 @@
 # Changelog
 
+## 1.1.0
+
+### Minor Changes
+
+- [#32](https://github.com/jonahmabry/world-cup-26/pull/32) [`55f0166`](https://github.com/jonahmabry/world-cup-26/commit/55f01665f744f5e79eb7a384e578972ca0a8d7d5) Thanks [@jonahmabry](https://github.com/jonahmabry)! - Show live and final knockout-stage scoring across the bracket and schedule. Knockout matches are now ingested from ESPN (previously dropped for lacking a group note), capturing the round, the winner, and penalty-shootout scores. The bracket resolves real results into the tree — winners advance, the two Semi-final losers feed the third-place play-off — and cards gain LIVE / FT / FT-Pens states with row-aligned scores, penalty notation, and a faded losing row. Schedule knockout rows mirror the group rows, and group-stage clinch badges hide once the group stage is complete.
+
+### Patch Changes
+
+- [#31](https://github.com/jonahmabry/world-cup-26/pull/31) [`24cfd4d`](https://github.com/jonahmabry/world-cup-26/commit/24cfd4d8dc5b26829a7da53f9e527c5c4617b65f) Thanks [@jonahmabry](https://github.com/jonahmabry)! - Widen the venue-city column in the schedule rows (group and knockout) so longer city names render without crowding the layout, backfill match data in the cache, and refresh the FIFA ranking table to the latest ordering.
+
 ## 1.0.0
 
 ### Major Changes
