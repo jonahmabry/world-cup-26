@@ -1319,7 +1319,127 @@
         "reds": 0,
         "secondYellows": 0
       }
+    },
+    "760480": {
+      "id": "760480",
+      "homeTeam": "Croatia",
+      "awayTeam": "Ghana",
+      "homeScore": 2,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "L",
+      "kickoff": "2026-06-27T21:00Z",
+      "homeCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760481": {
+      "id": "760481",
+      "homeTeam": "Colombia",
+      "awayTeam": "Portugal",
+      "homeScore": 0,
+      "awayScore": 0,
+      "status": "final",
+      "groupId": "K",
+      "kickoff": "2026-06-27T23:30Z",
+      "homeCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760482": {
+      "id": "760482",
+      "homeTeam": "DR Congo",
+      "awayTeam": "Uzbekistan",
+      "homeScore": 3,
+      "awayScore": 1,
+      "status": "final",
+      "groupId": "K",
+      "kickoff": "2026-06-27T23:30Z",
+      "homeCards": {
+        "yellows": 3,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 2,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760483": {
+      "id": "760483",
+      "homeTeam": "Jordan",
+      "awayTeam": "Argentina",
+      "homeScore": 1,
+      "awayScore": 3,
+      "status": "final",
+      "groupId": "J",
+      "kickoff": "2026-06-28T02:00Z",
+      "homeCards": {
+        "yellows": 3,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760484": {
+      "id": "760484",
+      "homeTeam": "Algeria",
+      "awayTeam": "Austria",
+      "homeScore": 3,
+      "awayScore": 3,
+      "status": "final",
+      "groupId": "J",
+      "kickoff": "2026-06-28T02:00Z",
+      "homeCards": {
+        "yellows": 0,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      }
+    },
+    "760485": {
+      "id": "760485",
+      "homeTeam": "Panama",
+      "awayTeam": "England",
+      "homeScore": 0,
+      "awayScore": 2,
+      "status": "final",
+      "groupId": "L",
+      "kickoff": "2026-06-27T21:00Z",
+      "homeCards": {
+        "yellows": 2,
+        "reds": 0,
+        "secondYellows": 0
+      },
+      "awayCards": {
+        "yellows": 1,
+        "reds": 0,
+        "secondYellows": 0
+      }
     }
   },
-  "backfillWatermark": "20260626"
+  "backfillWatermark": "20260627"
 }
