@@ -3,14 +3,14 @@ import { fifaRank, UNRANKED } from './fifaRanking';
 
 describe('fifaRank', () => {
   it('returns the ranking position for a known finalist', () => {
-    expect(fifaRank('France')).toBe(1);
-    expect(fifaRank('Argentina')).toBe(2);
+    expect(fifaRank('Argentina')).toBe(1);
+    expect(fifaRank('France')).toBe(2);
     expect(fifaRank('England')).toBe(4);
     expect(fifaRank('Curaçao')).toBe(82);
   });
 
-  it('lower position means better rank (France beats Argentina)', () => {
-    expect(fifaRank('France')).toBeLessThan(fifaRank('Argentina'));
+  it('lower position means better rank (Argentina beats France)', () => {
+    expect(fifaRank('Argentina')).toBeLessThan(fifaRank('France'));
   });
 
   it('all 48 finalists have distinct positions (no ties in snapshot)', () => {
