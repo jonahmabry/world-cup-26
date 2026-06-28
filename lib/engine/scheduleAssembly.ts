@@ -24,6 +24,11 @@ export interface KnockoutMatchRow {
   awayLabel: string;
   homeName: string | null;  // resolved team name, or null for placeholder
   awayName: string | null;
+  homeScore: number | null;
+  awayScore: number | null;
+  homeShootout: number | null;
+  awayShootout: number | null;
+  status: MatchRowStatus;
   venueCity: string;
   kickoffTime: string;
   isoDate: string;
@@ -187,6 +192,8 @@ function buildKnockoutRows(
     const homeSlot = resolveKnockoutSlot(matchup, true, matches, complete, lockedCache);
     const awaySlot = resolveKnockoutSlot(matchup, false, matches, complete, lockedCache);
 
+    // Scores/penalties come from the enriched bracket matchup (single source of truth),
+    // already oriented to the matchup's home/away — the same orientation as the slots above.
     return {
       kind: 'knockout',
       matchId: matchup.matchId,
@@ -194,6 +201,11 @@ function buildKnockoutRows(
       awayLabel: awaySlot.label,
       homeName: homeSlot.name,
       awayName: awaySlot.name,
+      homeScore: matchup.homeScore ?? null,
+      awayScore: matchup.awayScore ?? null,
+      homeShootout: matchup.homeShootout ?? null,
+      awayShootout: matchup.awayShootout ?? null,
+      status: matchup.status ? toRowStatus(matchup.status) : 'upcoming',
       venueCity: sched.venueCity,
       kickoffTime: sched.kickoffTime,
       isoDate: sched.isoDate,

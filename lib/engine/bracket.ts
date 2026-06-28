@@ -4,10 +4,11 @@
 //
 // Source: ESPN 2026 World Cup format article + FIFA official match schedule.
 
-import type { BracketMatchup, BracketTeam, GroupId, GroupStandings } from '@/lib/types';
+import type { BracketMatchup, BracketTeam, GroupId, GroupStandings, KnockoutRound, MatchResult } from '@/lib/types';
 import type { ThirdsRanking } from './thirds';
 import { getAllocation, type MatchSlot, type ThirdAllocation } from './allocationTable';
 import { KNOCKOUT_SCHEDULE } from './knockoutSchedule';
+import { normalizeTeamName } from './groups';
 
 function winner(g: GroupStandings): BracketTeam {
   const row = g.rows[0];
@@ -127,4 +128,97 @@ export function computeBracket(
   };
 
   return [...r32, ...laterRounds, thirdPlace];
+}
+
+// ── Knockout result enrichment ────────────────────────────────────────────────
+
+// Resolution order: a match's winner must populate its dependent slot before that
+// dependent match is itself resolved. ThirdPlace/Final are fed by the Semi-finals.
+const ROUND_ORDER: KnockoutRound[] = ['R32', 'R16', 'QF', 'SF', 'Final', 'ThirdPlace'];
+
+function teamName(team: BracketTeam): string | null {
+  return team.kind === 'team' ? team.name : null;
+}
+
+// Match a BracketMatchup to its MatchResult by round + unordered normalized team-pair.
+// Returns undefined unless both of the matchup's slots are resolved to concrete teams.
+function findKnockoutResult(
+  matchup: BracketMatchup,
+  matches: MatchResult[],
+): MatchResult | undefined {
+  const homeName = teamName(matchup.home);
+  const awayName = teamName(matchup.away);
+  if (!homeName || !awayName) return undefined;
+
+  const nh = normalizeTeamName(homeName);
+  const na = normalizeTeamName(awayName);
+
+  return matches.find(
+    (m) =>
+      m.round === matchup.round &&
+      ((normalizeTeamName(m.homeTeam) === nh && normalizeTeamName(m.awayTeam) === na) ||
+        (normalizeTeamName(m.homeTeam) === na && normalizeTeamName(m.awayTeam) === nh)),
+  );
+}
+
+// Enrich a projected bracket with actual knockout results. Walks rounds in order so
+// each finished match resolves its dependent winner-of / loser-of slots before those
+// dependent matches are processed. Unresolved matchups keep their placeholder slots.
+export function applyKnockoutResults(
+  matchups: BracketMatchup[],
+  matches: MatchResult[],
+): BracketMatchup[] {
+  const byId = new Map(matchups.map((m) => [m.matchId, { ...m }]));
+
+  for (const round of ROUND_ORDER) {
+    for (const matchup of byId.values()) {
+      if (matchup.round !== round) continue;
+
+      const result = findKnockoutResult(matchup, matches);
+      if (!result) continue;
+
+      const homeName = teamName(matchup.home)!;
+      const isHomeMatch = normalizeTeamName(result.homeTeam) === normalizeTeamName(homeName);
+
+      matchup.status = result.status;
+      matchup.homeScore = isHomeMatch ? result.homeScore : result.awayScore;
+      matchup.awayScore = isHomeMatch ? result.awayScore : result.homeScore;
+      matchup.homeShootout = (isHomeMatch ? result.homeShootout : result.awayShootout) ?? null;
+      matchup.awayShootout = (isHomeMatch ? result.awayShootout : result.homeShootout) ?? null;
+
+      // Orient ESPN's winner flag to the matchup's home/away; fall back to score.
+      let winnerSide: 'home' | 'away' | undefined;
+      if (result.winner) {
+        winnerSide = isHomeMatch
+          ? result.winner
+          : result.winner === 'home'
+            ? 'away'
+            : 'home';
+      } else if (result.status === 'final' && matchup.homeScore !== matchup.awayScore) {
+        winnerSide = matchup.homeScore! > matchup.awayScore! ? 'home' : 'away';
+      }
+      if (winnerSide) matchup.winner = winnerSide;
+
+      // Once final, push the winner (and, for feeding losers, the loser) downstream.
+      if (result.status === 'final' && winnerSide) {
+        const awayName = teamName(matchup.away)!;
+        const winnerName = winnerSide === 'home' ? homeName : awayName;
+        const loserName = winnerSide === 'home' ? awayName : homeName;
+
+        for (const target of byId.values()) {
+          for (const slot of ['home', 'away'] as const) {
+            const t = target[slot];
+            if (t.kind === 'winner-of' && t.matchId === matchup.matchId) {
+              target[slot] = { kind: 'team', name: winnerName };
+            } else if (t.kind === 'loser-of' && t.matchId === matchup.matchId) {
+              target[slot] = { kind: 'team', name: loserName };
+            }
+          }
+        }
+      }
+    }
+  }
+
+  // Preserve the original matchup ordering.
+  return matchups.map((m) => byId.get(m.matchId)!);
 }

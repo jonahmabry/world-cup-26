@@ -164,8 +164,10 @@ export function computeGroupStandings(allMatches: MatchResult[]): GroupStandings
       teamsInGroup.map((t) => [t, emptyStats(t, groupId)]),
     );
 
+    // Only this group's matches feed its table. Knockout matches carry a null
+    // groupId, so `m.groupId === groupId` already excludes them from every group.
     const groupMatches = allMatches.filter(
-      (m) => m.groupId === groupId && (m.status === 'final' || m.status === 'in-progress'),
+      (m) => m.groupId !== null && m.groupId === groupId && (m.status === 'final' || m.status === 'in-progress'),
     );
 
     const provisionalTeams = new Set<string>();

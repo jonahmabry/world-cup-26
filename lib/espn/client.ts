@@ -1,4 +1,4 @@
-import type { CardCounts, GroupId, MatchResult, MatchStatus } from '@/lib/types';
+import type { CardCounts, GroupId, KnockoutRound, MatchResult, MatchStatus } from '@/lib/types';
 import { isValidGroup, normalizeTeamName } from '@/lib/engine/groups';
 
 const SCOREBOARD_URL =
@@ -24,6 +24,9 @@ interface EspnCompetitor {
   homeAway: 'home' | 'away';
   team: EspnTeam;
   score?: string;
+  winner?: boolean;
+  // ESPN's penalty-shootout field shape is not yet observed in live data; parse defensively.
+  shootoutScore?: string | number;
 }
 
 interface EspnDetail {
@@ -45,6 +48,7 @@ interface EspnEvent {
     type?: {
       state?: string;
       shortDetail?: string;
+      description?: string;
     };
   };
   competitions?: EspnCompetition[];
@@ -68,6 +72,31 @@ function parseGroup(comp: EspnCompetition): GroupId | null {
   return isValidGroup(g) ? g : null;
 }
 
+// Maps an ESPN knockout game note (e.g. "FIFA World Cup, Round of 32") to a KnockoutRound.
+// Returns null when the note identifies no known knockout round.
+function parseRound(comp: EspnCompetition): KnockoutRound | null {
+  const note = (comp.altGameNote ?? comp.notes?.[0]?.headline ?? '').toLowerCase();
+  if (!note) return null;
+  if (note.includes('round of 32')) return 'R32';
+  if (note.includes('round of 16')) return 'R16';
+  if (note.includes('quarter')) return 'QF';
+  if (note.includes('semi')) return 'SF';
+  if (note.includes('third place') || note.includes('3rd place')) return 'ThirdPlace';
+  if (note.includes('final')) return 'Final';
+  return null;
+}
+
+// Defensively reads a competitor's penalty-shootout score. ESPN's exact field is
+// unverified in live data, so accept string or number and ignore anything non-numeric.
+function parseShootout(competitor: EspnCompetitor | undefined): number | null {
+  if (!competitor || competitor.shootoutScore == null) return null;
+  const n =
+    typeof competitor.shootoutScore === 'number'
+      ? competitor.shootoutScore
+      : parseInt(competitor.shootoutScore, 10);
+  return Number.isFinite(n) ? n : null;
+}
+
 function parseCards(comp: EspnCompetition, teamId: string): CardCounts {
   const counts: CardCounts = { yellows: 0, reds: 0, secondYellows: 0 };
   for (const detail of comp.details ?? []) {
@@ -88,8 +117,11 @@ function parseEvent(event: EspnEvent): MatchResult | null {
   const comp = event.competitions?.[0];
   if (!comp) return null;
 
+  // A match is either a group-stage match (has a "Group X" note) or a knockout
+  // match (has a recognizable round note). Skip events that resolve to neither.
   const groupId = parseGroup(comp);
-  if (!groupId) return null;
+  const round = groupId ? undefined : (parseRound(comp) ?? undefined);
+  if (!groupId && !round) return null;
 
   const home = comp.competitors?.find((c) => c.homeAway === 'home');
   const away = comp.competitors?.find((c) => c.homeAway === 'away');
@@ -97,14 +129,33 @@ function parseEvent(event: EspnEvent): MatchResult | null {
 
   const status = parseStatus(event);
 
+  const homeScore = parseInt(home.score ?? '0', 10) || 0;
+  const awayScore = parseInt(away.score ?? '0', 10) || 0;
+
+  // Winner from ESPN's per-competitor flag (authoritative incl. penalties); fall
+  // back to the regulation score when the flag is absent on a final match.
+  let winner: 'home' | 'away' | null = null;
+  if (home.winner === true) winner = 'home';
+  else if (away.winner === true) winner = 'away';
+  else if (status === 'final' && homeScore !== awayScore) {
+    winner = homeScore > awayScore ? 'home' : 'away';
+  }
+
+  const homeShootout = parseShootout(home);
+  const awayShootout = parseShootout(away);
+
   return {
     id: event.id,
     homeTeam: normalizeTeamName(home.team.displayName),
     awayTeam: normalizeTeamName(away.team.displayName),
-    homeScore: parseInt(home.score ?? '0', 10) || 0,
-    awayScore: parseInt(away.score ?? '0', 10) || 0,
+    homeScore,
+    awayScore,
     status,
-    groupId,
+    groupId: groupId ?? null,
+    round,
+    homeShootout,
+    awayShootout,
+    winner,
     kickoff: event.date,
     homeCards: parseCards(comp, home.team.id),
     awayCards: parseCards(comp, away.team.id),
