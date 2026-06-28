@@ -48,7 +48,6 @@ interface EspnEvent {
     type?: {
       state?: string;
       shortDetail?: string;
-      description?: string;
     };
   };
   competitions?: EspnCompetition[];

@@ -52,6 +52,6 @@
 ## 9. Verification & wrap-up
 
 - [x] 9.1 `npm run dev`: `/bracket` shows M73 `FT`, South Africa 0 / Canada 1, Canada advanced into its R16 slot, South Africa faded; `/schedule` knockout rows mirror group rows; standings show no ✓/✗ badges. (Verified against the live dev server: `/api/scoreboard` returns `R32 South Africa 0-1 Canada [final] winner=away`; `/bracket` shows FT + live caption + Canada advanced; `/schedule` shows the score; best-thirds `✓ THROUGH` hidden. Group-table badges gate on `isGroupStageComplete`, which is data-dependent on the disk cache having all 72 group finals.)
-- [ ] 9.2 Re-verify ESPN penalty field shape at the first real shootout and adjust parsing if needed. (Deferred — no shootout has occurred yet; parsing is defensive. Tracked as a known follow-up.)
+- [x] 9.2 Re-verify ESPN penalty field shape at the first real shootout and adjust parsing if needed. (User verified the penalty-shootout result renders correctly on the bracket — `FT-Pens` + `1 (4)` notation confirmed against real data; defensive parsing matched ESPN's live shape.)
 - [x] 9.3 `npm run lint && npm run typecheck && npm test && npm run build` all pass. (lint 0 errors; typecheck clean; 189 tests pass; build succeeds.)
 - [x] 9.4 Branch `feat/live-knockout-scores`; on completion commit, push, and open a PR (per AGENTS.md).
